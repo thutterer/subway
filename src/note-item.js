@@ -44,6 +44,17 @@ class NoteItem extends LitElement {
     this.dispatchEvent(event);
   }
 
+  _onDelete() {
+    console.log('DELETEEE')
+    const event = new CustomEvent('note-delete', {
+      detail: { id: this.id },
+      bubbles: true,
+      composed: true
+    })
+
+    this.dispatchEvent(event);
+  }
+
   render() {
     return html`
       <div class="note-card">
@@ -52,6 +63,10 @@ class NoteItem extends LitElement {
           @input=${this._onInput}
           placeholder="Start typing your subway note...">
         </textarea>
+        <button
+          confirm="Sure?"
+          @click=${this._onDelete}
+        >x</button>
       </div>
     `;
   }

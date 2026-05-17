@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { dbFetchAll, dbCreateNote, dbUpdateNote } from './db/db.js';
+import { dbFetchAll, dbCreateNote, dbDeleteNote, dbUpdateNote } from './db/db.js';
 
 // Import child presentation components
 import './note-list.js';
@@ -34,6 +34,13 @@ class AppRoot extends LitElement {
     await this.refreshNotes();
   }
 
+  async handleNoteDelete(e) {
+    console.log('got note delete....')
+    const { id } = e.detail;
+    await dbDeleteNote(id);
+    await this.refreshNotes();
+  }
+
   render() {
     return html`
       <header>
@@ -43,7 +50,9 @@ class AppRoot extends LitElement {
 
       <note-list
         .notes=${this.notes}
-        @note-changed=${this.handleNoteUpdate}>
+        @note-changed=${this.handleNoteUpdate}
+        @note-delete=${this.handleNoteDelete}
+      >
       </note-list>
     `;
   }
