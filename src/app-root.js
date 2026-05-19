@@ -45,6 +45,7 @@ class AppRoot extends LitElement {
       <header>
         <h1>Subway Notes</h1>
         <my-button @click=${this.handleCreate}>+ New Note</my-button>
+        <my-button disabled @click=${this.handleCreate}>[] New List</my-button>
       </header>
 
       <note-list
