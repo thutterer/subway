@@ -30,7 +30,9 @@ class NoteList extends LitElement {
         ${this.notes.map(note => html`
           <note-item
             .id=${note.id}
-            .text=${note.text}>
+            .text=${note.text}
+            .created_at=${note.created_at}>
+
           </note-item>
         `)}
 
@@ -41,4 +43,5 @@ class NoteList extends LitElement {
     `;
   }
 }
+
 customElements.define('note-list', NoteList);

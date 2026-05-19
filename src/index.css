@@ -9,10 +9,25 @@
   }
 }
 
+/* silkscreen-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Silkscreen';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./assets/silkscreen-v6-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
 body {
   margin: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  font-family: "Silkscreen", monospace;
+}
+
+app-root {
+  min-width: min(600px, 100vw);
 }

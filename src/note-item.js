@@ -1,20 +1,35 @@
 import { LitElement, html, css } from 'lit';
+import './my-button.js';
+
+const formatTimestamp = (timestamp) => {
+  if (!timestamp) return '';
+  return new Date(timestamp).toLocaleString(undefined, {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
+};
 
 class NoteItem extends LitElement {
   static properties = {
     id: { type: Number },
-    text: { type: String }
+    text: { type: String },
+    created_at: { type: Date },
   };
 
   static styles = css`
     .note-card {
       border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 0.5rem;
-      background: white;
     }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     textarea {
       width: 100%;
+      background: transparent;
       border: none;
       resize: vertical;
       font-family: inherit;
@@ -45,28 +60,31 @@ class NoteItem extends LitElement {
   }
 
   _onDelete() {
-    console.log('DELETEEE')
-    const event = new CustomEvent('note-delete', {
-      detail: { id: this.id },
-      bubbles: true,
-      composed: true
-    })
+    const yes = confirm("Sure?")
 
-    this.dispatchEvent(event);
+    if (yes) {
+      const event = new CustomEvent('note-delete', {
+        detail: { id: this.id },
+        bubbles: true,
+        composed: true
+      })
+
+      this.dispatchEvent(event);
+    }
   }
 
   render() {
     return html`
       <div class="note-card">
+        <header>
+          <span>${formatTimestamp(this.created_at)}</span>
+          <my-button @click=${this._onDelete}>x</my-button>
+        </header>
         <textarea
           .value=${this.text}
           @input=${this._onInput}
-          placeholder="Start typing your subway note...">
+          placeholder="Start typing...">
         </textarea>
-        <button
-          confirm="Sure?"
-          @click=${this._onDelete}
-        >x</button>
       </div>
     `;
   }

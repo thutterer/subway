@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { dbFetchAll, dbCreateNote, dbDeleteNote, dbUpdateNote } from './db/db.js';
 
-// Import child presentation components
 import './note-list.js';
+import './my-button.js';
 
 class AppRoot extends LitElement {
   static properties = {
@@ -35,7 +35,6 @@ class AppRoot extends LitElement {
   }
 
   async handleNoteDelete(e) {
-    console.log('got note delete....')
     const { id } = e.detail;
     await dbDeleteNote(id);
     await this.refreshNotes();
@@ -45,7 +44,7 @@ class AppRoot extends LitElement {
     return html`
       <header>
         <h1>Subway Notes</h1>
-        <button @click=${this.handleCreate}>+ New Note</button>
+        <my-button @click=${this.handleCreate}>+ New Note</my-button>
       </header>
 
       <note-list
