@@ -77,7 +77,7 @@ class NoteItem extends LitElement {
     return html`
       <div class="note-card">
         <header>
-          <span>${formatTimestamp(this.created_at)}</span>
+          <span><a href="/note/${this.id}">${formatTimestamp(this.created_at)}</a></span>
           <my-button @click=${this._onDelete}>x</my-button>
         </header>
         <textarea

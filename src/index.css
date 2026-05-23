@@ -1,4 +1,8 @@
 :root {
+  --brand-color: wheat;
+}
+
+:root {
   color-scheme: light dark;
   background-color: #ffffff;
 }

@@ -16,6 +16,15 @@ export const dbCreateNote = () => db.notes.add({
   created_at: Date.now()
 });
 
+export const dbCreateFoo = (text, type) => db.notes.add({
+  text,
+  type,
+  pending_sync: 1,
+  created_at: Date.now()
+});
+
 export const dbUpdateNote = (id, text) => db.notes.update(id, { text, pending_sync: 1 });
 
 export const dbDeleteNote = (id) => db.notes.delete(id);
+
+export const dbFetchNoteById = (id) => db.notes.get(id);
