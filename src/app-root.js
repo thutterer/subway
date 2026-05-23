@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { Router } from '@lit-labs/router';
+import { liveQuery } from 'dexie';
 import { dbFetchAll, dbCreateNote, dbDeleteNote, dbUpdateNote } from './db/db.js';
 
 import { globalStyles } from './shared-styles.js';
@@ -27,15 +28,28 @@ class AppRoot extends LitElement {
       path: '/',
       render: () => html`<note-list
         .notes=${this.notes}
-        @note-changed=${this.handleNoteUpdate}
-        @note-delete=${this.handleNoteDelete}
       >
       </note-list>`,
       enter: async () => { await import('./note-list.js') },
     },
     {
       path: '/new',
-      render: () => html`<new-page @navigate-to=${this._navTo}></new-page>`,
+      render: () => {
+        const searchParams = new URLSearchParams(window.location.search);
+        let typeParam = searchParams.get('type') || '';
+        const allowedTypes = ['Note', 'List'];
+
+        if (!allowedTypes.includes(typeParam)) {
+          typeParam = allowedTypes[0];
+        }
+
+        return html`
+          <new-page
+            .type=${typeParam}
+            @navigate-to=${this._navTo}>
+          </new-page>
+        `;
+      },
       enter: async (_params) => {
         await import('./new-page.js');
       },
@@ -60,40 +74,44 @@ class AppRoot extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    await this.refreshNotes();
+
+    this.subscription = liveQuery(() => dbFetchAll()).subscribe({
+      next: (data) => {
+        this.notes = data;
+        this.requestUpdate();
+      }
+    });
   }
 
-  async refreshNotes() {
-    this.notes = await dbFetchAll();
-  }
-
-  async handleCreate() {
-    await dbCreateNote();
-    await this.refreshNotes();
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.subscription.unsubscribe();
   }
 
   async handleNoteUpdate(e) {
     const { id, text } = e.detail;
     await dbUpdateNote(id, text);
-    await this.refreshNotes();
   }
 
   async handleNoteDelete(e) {
     const { id } = e.detail;
     await dbDeleteNote(id);
-    await this.refreshNotes();
   }
 
   render() {
     return html`
       <header>
         <h1><a href="/">Subway Notes</a></h1>
-        <a href="/new">New</a>
-        <my-button @click=${this.handleCreate}>+ New Note</my-button>
-        <my-button disabled @click=${this.handleCreate}>[] New List</my-button>
+        <a href="/new?type=Note">New</a>
+        <a href="/new?type=List">New list</a>
       </header>
 
-      ${this.#router.outlet()}
+      <main
+        @note-changed=${this.handleNoteUpdate}
+        @note-delete=${this.handleNoteDelete}
+      >
+        ${this.#router.outlet()}
+      </main>
     `;
   }
 }
