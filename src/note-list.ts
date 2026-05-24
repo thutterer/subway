@@ -57,6 +57,7 @@ class NoteList extends LitElement {
   notes: Note[] = [];
 
   render() {
+    const base = import.meta.env.BASE_URL;
     if (this.notes.length === 0) {
       return html`<p class="empty">No notes yet.</p>`;
     }
@@ -64,7 +65,7 @@ class NoteList extends LitElement {
     return html`
       <div class="list" role="list">
         ${this.notes.map(note => html`
-          <a class="row" role="listitem" href="/note/${note.id}">
+          <a class="row" role="listitem" href="${base}note/${note.id}">
             <span class="text">${note.text || 'Untitled'}</span>
             <span class="date">${formatTimestamp(note.created_at)}</span>
             <span class="type">${note.type || 'Note'}</span>

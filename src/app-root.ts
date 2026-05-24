@@ -11,30 +11,26 @@ class AppRoot extends LitElement {
 
   notes: Note[] = [];
 
+  #base = import.meta.env.BASE_URL;
+
   #router = new Router(this, [
     {
-      path: '/',
+      path: `${this.#base}`,
       render: () => html`<index-page .notes=${this.notes}></index-page>`,
       enter: () => { import('./index-page.js'); return true; },
     },
     {
-      path: '/new',
-      render: () => {
-        return html`
-          <new-page
-            @navigate-to=${this.#onNavigate}>
-          </new-page>
-        `;
-      },
+      path: `${this.#base}new`,
+      render: () => html`<new-page @navigate-to=${this.#onNavigate}></new-page>`,
       enter: () => { import('./new-page.js'); return true; },
     },
     {
-      path: '/note/:id',
+      path: `${this.#base}note/:id`,
       render: (params) => html`<edit-page .noteId=${Number(params.id)}></edit-page>`,
       enter: () => { import('./edit-page.js'); return true; },
     },
     {
-      path: '/*',
+      path: `${this.#base}*`,
       render: () => html`<h2>404</h2>`
     }
   ]);
@@ -57,7 +53,7 @@ class AppRoot extends LitElement {
 
   #onNavigate(e: Event) {
     const { id } = (e as CustomEvent<{ id: number }>).detail;
-    const path = `/note/${id}`;
+    const path = `${this.#base}note/${id}`;
     window.history.pushState({}, '', path);
     this.#router.goto(path);
   }

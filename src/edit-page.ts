@@ -103,7 +103,7 @@ class EditPage extends LitElement {
         bubbles: true,
         composed: true
       }));
-      window.location.href = '/';
+      window.location.href = import.meta.env.BASE_URL;
     }
   }
 

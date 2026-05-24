@@ -15,7 +15,7 @@ class BackLink extends LitElement {
     }
   `;
 
-  href = '/';
+  href = import.meta.env.BASE_URL;
 
   render() {
     return html`<a href=${this.href}>&lt;</a>`;

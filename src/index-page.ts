@@ -33,10 +33,11 @@ class IndexPage extends LitElement {
   notes: Note[] = [];
 
   render() {
+    const base = import.meta.env.BASE_URL;
     return html`
       <header>
-        <h1><a href="/">Subway Notes</a></h1>
-        <a href="/new?type=Note">+ New</a>
+        <h1><a href=${base}>Subway Notes</a></h1>
+        <a href="${base}new?type=Note">+ New</a>
       </header>
 
       <note-list .notes=${this.notes}></note-list>
