@@ -1,6 +1,13 @@
 import { LitElement, html } from 'lit';
 import './my-button.js';
+import './tile-select.js';
+import type { TileOption } from './tile-select.js';
 import { dbCreateFoo } from './db/db.js';
+
+const TYPE_OPTIONS: TileOption[] = [
+  { value: 'Note', label: 'Note', icon: '📝' },
+  { value: 'List', label: 'List', icon: '☑' },
+];
 
 class NewPage extends LitElement {
   static properties = {
@@ -9,10 +16,10 @@ class NewPage extends LitElement {
   };
 
   text = '';
-  type: string = 'Note';
+  type = 'Note';
 
-  private _handleSelection(e: Event) {
-    this.type = (e.target as HTMLSelectElement).value;
+  private _onTypeChange(e: Event) {
+    this.type = (e as CustomEvent<{ value: string }>).detail.value;
   }
 
   private _handleTextChange(e: Event) {
@@ -35,14 +42,11 @@ class NewPage extends LitElement {
       <textarea @change=${this._handleTextChange}></textarea>
 
       <label>What is this?</label>
-      <select
+      <tile-select
+        .options=${TYPE_OPTIONS}
         .value=${this.type}
-        @change=${this._handleSelection}
-      >
-        <option>Note</option>
-        <option>List</option>
-        <option disabled>Event</option>
-      </select>
+        @change=${this._onTypeChange}
+      ></tile-select>
 
       <my-button @click=${this._create}>Create</my-button>
     `
