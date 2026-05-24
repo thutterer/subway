@@ -20,11 +20,9 @@ No test, lint, typecheck, or formatter commands exist.
 - `index.html` → `/src/app-root.js` — entrypoint, custom element `<app-root>`
 - `src/` — all components, flat layout
 - `src/db/db.js` — Dexie CRUD: `dbFetchAll`, `dbCreateNote`, `dbCreateFoo`, `dbUpdateNote`, `dbDeleteNote`, `dbFetchNoteById`
-- `src/assets/` — starter template images/ fonts (Silkscreen .woff2)
-- `public/icons.svg` — SVG icon sprite used by `my-element.js`
+- `src/assets/` — Silkscreen .woff2 font
 
 ## Important quirks
-- **Dead code** — `my-element.js` (Vite Lit starter template) and `app-note-detail.js` are registered as custom elements but never loaded by the router. Do not add imports from them.
 - **Two create functions** in `db.js`: `dbCreateNote()` (no args, empty text) is unused; `dbCreateFoo(text, type)` is what `new-page.js` actually calls.
 - **Empty `src/fonts/`** directory — the Silkscreen font lives in `src/assets/`, loaded via `@font-face` in `src/index.css`.
 - **PWA** is generated at build time only; `vite-plugin-pwa` has no explicit config, so it uses plugin defaults.
