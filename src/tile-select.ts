@@ -34,6 +34,7 @@ class TileSelect extends LitElement {
       gap: 1rem;
     }
     .tile {
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
       align-items: center;

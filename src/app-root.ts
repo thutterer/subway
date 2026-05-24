@@ -4,8 +4,6 @@ import { liveQuery } from 'dexie';
 import { dbFetchAll, dbUpdateNote, dbDeleteNote } from './db/db.js';
 import type { Note, Task } from './db/db.js';
 
-import './my-button.js';
-
 class AppRoot extends LitElement {
   static properties = {
     notes: { type: Array }
@@ -22,11 +20,8 @@ class AppRoot extends LitElement {
     {
       path: '/new',
       render: () => {
-        const raw = new URLSearchParams(window.location.search).get('type') ?? '';
-        const type = ['Note', 'List'].includes(raw) ? raw : 'Note';
         return html`
           <new-page
-            .type=${type}
             @navigate-to=${this.#onNavigate}>
           </new-page>
         `;

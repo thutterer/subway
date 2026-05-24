@@ -1,6 +1,5 @@
 import { LitElement, html, css } from 'lit';
 import './back-link.js';
-import './my-button.js';
 import './tile-select.js';
 import type { TileOption } from './tile-select.js';
 import { dbCreateFoo } from './db/db.js';
@@ -20,24 +19,9 @@ class NewPage extends LitElement {
     }
   `;
 
-  static properties = {
-    text: { type: String },
-    type: { type: String }
-  };
-
-  text = '';
-  type = 'Note';
-
-  private _onTypeChange(e: Event) {
-    this.type = (e as CustomEvent<{ value: string }>).detail.value;
-  }
-
-  private _handleTextChange(e: Event) {
-    this.text = (e.target as HTMLTextAreaElement).value;
-  }
-
-  private async _create() {
-    const id = await dbCreateFoo(this.text, this.type);
+  private async _onTypeChange(e: Event) {
+    const type = (e as CustomEvent<{ value: string }>).detail.value;
+    const id = await dbCreateFoo('', type);
     this.dispatchEvent(new CustomEvent('navigate-to', {
       bubbles: true,
       composed: true,
@@ -49,19 +33,13 @@ class NewPage extends LitElement {
     return html`
       <div class="header">
         <back-link></back-link>
-        <h2>New</h2>
+        <h2>What do you want to create?</h2>
       </div>
 
-      <textarea @change=${this._handleTextChange}></textarea>
-
-      <label>What is this?</label>
       <tile-select
         .options=${TYPE_OPTIONS}
-        .value=${this.type}
         @change=${this._onTypeChange}
       ></tile-select>
-
-      <my-button @click=${this._create}>Create</my-button>
     `
   }
 }
