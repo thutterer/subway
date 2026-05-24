@@ -1,4 +1,4 @@
-import{a as e,i as t,n,r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.js";var i=class extends r{static{this.properties={noteId:{type:Number},text:{type:String},created_at:{type:Number}}}static{this.styles=e`
+import{a as e,i as t,o as n,r}from"./index-CefUoxtg.js";import"./back-link-ChxeW9vB.js";var i=class extends t{static{this.properties={noteId:{type:Number},text:{type:String},created_at:{type:Number}}}static{this.styles=n`
     .note-card {
       border: 1px solid var(--border-light);
     }
@@ -14,7 +14,7 @@ import{a as e,i as t,n,r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.j
     textarea:focus {
       outline: none;
     }
-  `}_onInput(e){let t=e.target.value;this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:t},bubbles:!0,composed:!0}))}render(){return t`
+  `}_onInput(e){let t=e.target.value;this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:t},bubbles:!0,composed:!0}))}render(){return e`
       <div class="note-card">
         <textarea
           .value=${this.text}
@@ -22,7 +22,7 @@ import{a as e,i as t,n,r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.j
           placeholder="Start typing...">
         </textarea>
       </div>
-    `}};customElements.define(`note-item`,i);var a=class extends r{constructor(...e){super(...e),this.tasks=[]}static{this.properties={noteId:{type:Number},tasks:{type:Array}}}static{this.styles=e`
+    `}};customElements.define(`note-item`,i);var a=class extends t{constructor(...e){super(...e),this.tasks=[]}static{this.properties={noteId:{type:Number},tasks:{type:Array}}}static{this.styles=n`
     :host {
       display: block;
     }
@@ -100,14 +100,14 @@ import{a as e,i as t,n,r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.j
       outline: none;
       border-color: var(--brand-color, wheat);
     }
-  `}_addTask(){let e=this.renderRoot.querySelector(`input`),t=e.value.trim();t&&(this.tasks=[...this.tasks,{id:crypto.randomUUID(),text:t,done:!1}],e.value=``,this._dispatch())}_onKeyDown(e){e.key===`Enter`&&this._addTask()}_toggleTask(e){this.tasks=this.tasks.map(t=>t.id===e?{...t,done:!t.done}:t),this._dispatch()}_deleteTask(e,t){e.stopPropagation(),this.tasks=this.tasks.filter(e=>e.id!==t),this._dispatch()}_dispatch(){this.dispatchEvent(new CustomEvent(`list-changed`,{detail:{id:this.noteId,tasks:this.tasks},bubbles:!0,composed:!0}))}render(){let e=this.tasks.filter(e=>e.done).length;return t`
+  `}_addTask(){let e=this.renderRoot.querySelector(`input`),t=e.value.trim();t&&(this.tasks=[...this.tasks,{id:crypto.randomUUID(),text:t,done:!1}],e.value=``,this._dispatch())}_onKeyDown(e){e.key===`Enter`&&this._addTask()}_toggleTask(e){this.tasks=this.tasks.map(t=>t.id===e?{...t,done:!t.done}:t),this._dispatch()}_deleteTask(e,t){e.stopPropagation(),this.tasks=this.tasks.filter(e=>e.id!==t),this._dispatch()}_dispatch(){this.dispatchEvent(new CustomEvent(`list-changed`,{detail:{id:this.noteId,tasks:this.tasks},bubbles:!0,composed:!0}))}render(){let t=this.tasks.filter(e=>e.done).length;return e`
       <div>
-        <div class="track"><div class="fill" style="width: ${this.tasks.length>0?e/this.tasks.length*100:0}%"></div></div>
-        ${this.tasks.map(e=>t`
-          <div class="task" @click=${()=>this._toggleTask(e.id)}>
-            <span class="indicator">${e.done?`☑`:`☐`}</span>
-            <span class="text ${e.done?`done`:``}">${e.text}</span>
-            <button class="delete" @click=${t=>this._deleteTask(t,e.id)}>x</button>
+        <div class="track"><div class="fill" style="width: ${this.tasks.length>0?t/this.tasks.length*100:0}%"></div></div>
+        ${this.tasks.map(t=>e`
+          <div class="task" @click=${()=>this._toggleTask(t.id)}>
+            <span class="indicator">${t.done?`☑`:`☐`}</span>
+            <span class="text ${t.done?`done`:``}">${t.text}</span>
+            <button class="delete" @click=${e=>this._deleteTask(e,t.id)}>x</button>
           </div>
         `)}
 
@@ -119,7 +119,7 @@ import{a as e,i as t,n,r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.j
           <button class="delete" @click=${this._addTask}>+</button>
         </div>
       </div>
-    `}};customElements.define(`list-item`,a);var o=class extends r{constructor(...e){super(...e),this.type=``,this.text=``,this.created_at=0,this._tasks=[],this._editingTitle=!1}static{this.properties={noteId:{type:Number},text:{type:String},type:{type:String}}}static{this.styles=e`
+    `}};customElements.define(`list-item`,a);var o=class extends t{constructor(...e){super(...e),this.type=``,this.text=``,this.created_at=0,this._tasks=[],this._editingTitle=!1}static{this.properties={noteId:{type:Number},text:{type:String},type:{type:String}}}static{this.styles=n`
     .list-header {
       display: flex;
       align-items: center;
@@ -178,18 +178,18 @@ import{a as e,i as t,n,r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.j
         }
       }
     }
-  `}async _fetchRecord(e){let t=await n(e);t&&(this.text=t.text,this.type=t.type??``,this.created_at=t.created_at,this._tasks=t.tasks??[])}willUpdate(e){e.has(`noteId`)&&this._fetchRecord(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/subway/`)}_startEdit(){this._editingTitle=!0,this.requestUpdate(),this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_saveTitle(e){let t=e.target;this.text=t.value,this._editingTitle=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onTitleKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return t`
-      ${this.type===`List`?t`
+  `}async _fetchRecord(e){let t=await r(e);t&&(this.text=t.text,this.type=t.type??``,this.created_at=t.created_at,this._tasks=t.tasks??[])}willUpdate(e){e.has(`noteId`)&&this._fetchRecord(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/subway/`)}_startEdit(){this._editingTitle=!0,this.requestUpdate(),this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_saveTitle(e){let t=e.target;this.text=t.value,this._editingTitle=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onTitleKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return e`
+      ${this.type===`List`?e`
             <div class="list-header">
               <back-link></back-link>
-              ${this._editingTitle?t`<input class="title-input" .value=${this.text} @blur=${this._saveTitle} @keydown=${this._onTitleKeyDown} />`:t`<span class="title-text">${this.text||`Untitled`}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`}
+              ${this._editingTitle?e`<input class="title-input" .value=${this.text} @blur=${this._saveTitle} @keydown=${this._onTitleKeyDown} />`:e`<span class="title-text">${this.text||`Untitled`}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`}
             </div>
             <list-item
               .noteId=${this.noteId}
               .tasks=${this._tasks}
               @list-changed=${this._onListChanged}
             ></list-item>
-          `:t`
+          `:e`
             <div class="note-header">
               <back-link></back-link>
             </div>

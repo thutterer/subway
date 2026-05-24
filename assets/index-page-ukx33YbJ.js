@@ -1,10 +1,10 @@
-import{a as e,i as t,r as n}from"./index-BoVbDRiX.js";var r=e`
+import{a as e,i as t,o as n,t as r}from"./index-CefUoxtg.js";var i=n`
   a {
     text-decoration: none;
     color: var(--brand-color);
     transition: color 0.15s ease-in-out;
   }
-`,i=e=>new Date(e).toLocaleString(void 0,{dateStyle:`short`,timeStyle:`short`}),a=class extends n{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=e`
+`,a=e=>new Date(e).toLocaleString(void 0,{dateStyle:`short`,timeStyle:`short`}),o=class extends t{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=n`
     .list {
       display: flex;
       flex-direction: column;
@@ -44,17 +44,17 @@ import{a as e,i as t,r as n}from"./index-BoVbDRiX.js";var r=e`
       color: var(--text-subtle);
       font-style: italic;
     }
-  `}render(){return this.notes.length===0?t`<p class="empty">No notes yet.</p>`:t`
+  `}render(){return this.notes.length===0?e`<p class="empty">No notes yet.</p>`:e`
       <div class="list" role="list">
-        ${this.notes.map(e=>t`
-          <a class="row" role="listitem" href="${`/subway/`}note/${e.id}">
-            <span class="text">${e.text||`Untitled`}</span>
-            <span class="date">${i(e.created_at)}</span>
-            <span class="type">${e.type||`Note`}</span>
+        ${this.notes.map(t=>e`
+          <a class="row" role="listitem" href="${`/subway/`}note/${t.id}">
+            <span class="text">${t.text||`Untitled`}</span>
+            <span class="date">${a(t.created_at)}</span>
+            <span class="type">${t.type||`Note`}</span>
           </a>
         `)}
       </div>
-    `}};customElements.define(`note-list`,a);var o=class extends n{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=[r,e`
+    `}};customElements.define(`note-list`,o);var s=class extends t{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=[i,n`
     header {
       display: flex;
       gap: 1rem;
@@ -74,11 +74,12 @@ import{a as e,i as t,r as n}from"./index-BoVbDRiX.js";var r=e`
     header > a:hover {
       filter: brightness(0.9);
     }
-  `]}render(){let e=`/subway/`;return t`
+  `]}render(){let t=`/subway/`;return e`
       <header>
-        <h1><a href=${e}>Subway Notes</a></h1>
-        <a href="${e}new?type=Note">+ New</a>
+        <h1><a href=${t}>Subway Notes</a></h1>
+        <button @click=${r.cloud.login}>Login</button>
+        <a href="${t}new?type=Note">+ New</a>
       </header>
 
       <note-list .notes=${this.notes}></note-list>
-    `}};customElements.define(`index-page`,o);
+    `}};customElements.define(`index-page`,s);

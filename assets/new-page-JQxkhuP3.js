@@ -1,4 +1,4 @@
-import{a as e,i as t,r as n,t as r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.js";var i=class extends n{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`change`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=e`
+import{a as e,i as t,n,o as r}from"./index-CefUoxtg.js";import"./back-link-ChxeW9vB.js";var i=class extends t{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`change`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=r`
     :host {
       display: block;
     }
@@ -49,29 +49,29 @@ import{a as e,i as t,r as n,t as r}from"./index-BoVbDRiX.js";import"./back-link-
       font-size: 2rem;
       line-height: 1;
     }
-  `}render(){return t`
+  `}render(){return e`
       <div class="tiles" role="radiogroup">
-        ${this.options.map(e=>t`
+        ${this.options.map(t=>e`
           <button
-            class="tile ${e.value===this.value?`selected`:``}"
-            ?disabled=${e.disabled}
+            class="tile ${t.value===this.value?`selected`:``}"
+            ?disabled=${t.disabled}
             role="radio"
-            aria-checked=${e.value===this.value}
-            @click=${()=>this._onSelect(e.value)}
+            aria-checked=${t.value===this.value}
+            @click=${()=>this._onSelect(t.value)}
           >
-            <span class="icon">${e.icon}</span>
-            <span class="label">${e.label}</span>
+            <span class="icon">${t.icon}</span>
+            <span class="label">${t.label}</span>
           </button>
         `)}
       </div>
-    `}};customElements.define(`tile-select`,i);var a=[{value:`Note`,label:`Note`,icon:`📝`},{value:`List`,label:`List`,icon:`☑`}],o=class extends n{static{this.styles=e`
+    `}};customElements.define(`tile-select`,i);var a=[{value:`Note`,label:`Note`,icon:`📝`},{value:`List`,label:`List`,icon:`☑`}],o=class extends t{static{this.styles=r`
     .header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
     }
-  `}async _onTypeChange(e){let t=e.detail.value,n=await r(``,t);this.dispatchEvent(new CustomEvent(`navigate-to`,{bubbles:!0,composed:!0,detail:{id:n}}))}render(){return t`
+  `}async _onTypeChange(e){let t=e.detail.value,r=await n(``,t);this.dispatchEvent(new CustomEvent(`navigate-to`,{bubbles:!0,composed:!0,detail:{id:r}}))}render(){return e`
       <div class="header">
         <back-link></back-link>
         <h2>What do you want to create?</h2>
