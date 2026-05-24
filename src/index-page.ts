@@ -42,9 +42,9 @@ class IndexPage extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.#loggedIn = !!db.cloud.currentUserId;
-    this.#sub = db.cloud.currentUser.subscribe(() => {
-      this.#loggedIn = !!db.cloud.currentUserId;
+    this.#loggedIn = db.cloud.currentUser.value.isLoggedIn === true;
+    this.#sub = db.cloud.currentUser.subscribe((user) => {
+      this.#loggedIn = user.isLoggedIn === true;
       this.requestUpdate();
     });
   }
