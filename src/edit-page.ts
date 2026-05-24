@@ -12,7 +12,20 @@ class EditPage extends LitElement {
   };
 
   static styles = css`
+    .back {
+      text-decoration: none;
+      color: var(--text-muted);
+    }
+    .back:hover {
+      color: var(--text-strong);
+    }
     .list-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .note-header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -133,6 +146,7 @@ class EditPage extends LitElement {
       ${this.type === 'List'
         ? html`
             <div class="list-header">
+              <a href="/" class="back">&lt;</a>
               ${this._editingTitle
                 ? html`<input class="title-input" .value=${this.text} @blur=${this._saveTitle} @keydown=${this._onTitleKeyDown} />`
                 : html`<span class="title-text">${this.text || 'Untitled'}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
@@ -145,6 +159,9 @@ class EditPage extends LitElement {
             ></list-item>
           `
         : html`
+            <div class="note-header">
+              <a href="/" class="back">&lt;</a>
+            </div>
             <note-item
               .noteId=${this.noteId}
               .text=${this.text}

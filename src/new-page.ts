@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import './my-button.js';
 import './tile-select.js';
 import type { TileOption } from './tile-select.js';
@@ -10,6 +10,22 @@ const TYPE_OPTIONS: TileOption[] = [
 ];
 
 class NewPage extends LitElement {
+  static styles = css`
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .back {
+      text-decoration: none;
+      color: var(--text-muted);
+    }
+    .back:hover {
+      color: var(--text-strong);
+    }
+  `;
+
   static properties = {
     text: { type: String },
     type: { type: String }
@@ -37,7 +53,10 @@ class NewPage extends LitElement {
 
   render() {
     return html`
-      <h2>New</h2>
+      <div class="header">
+        <a href="/" class="back">&lt;</a>
+        <h2>New</h2>
+      </div>
 
       <textarea @change=${this._handleTextChange}></textarea>
 

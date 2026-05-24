@@ -1,10 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import { Router } from '@lit-labs/router';
 import { liveQuery } from 'dexie';
 import { dbFetchAll, dbUpdateNote, dbDeleteNote } from './db/db.js';
 import type { Note, Task } from './db/db.js';
 
-import { globalStyles } from './shared-styles.js';
 import './my-button.js';
 
 class AppRoot extends LitElement {
@@ -12,37 +11,13 @@ class AppRoot extends LitElement {
     notes: { type: Array }
   };
 
-  static styles = [globalStyles, css`
-    header {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-
-      > h1 {
-        flex-grow: 1;
-      }
-
-      > a {
-        background: var(--brand-color);
-        color: black;
-        padding: 4px 8px;
-
-        &:hover {
-          filter: brightness(1.1);
-          color: black:
-        }
-      }
-
-    }
-  `];
-
   notes: Note[] = [];
 
   #router = new Router(this, [
     {
       path: '/',
-      render: () => html`<note-list .notes=${this.notes}></note-list>`,
-      enter: () => { import('./note-list.js'); return true; },
+      render: () => html`<index-page .notes=${this.notes}></index-page>`,
+      enter: () => { import('./index-page.js'); return true; },
     },
     {
       path: '/new',
@@ -104,11 +79,6 @@ class AppRoot extends LitElement {
 
   render() {
     return html`
-      <header>
-        <h1><a href="/">Subway Notes</a></h1>
-        <a href="/new?type=Note">+ New</a>
-      </header>
-
       <main
         @note-changed=${this.#onNoteChanged}
         @note-delete=${this.#onNoteDeleted}
