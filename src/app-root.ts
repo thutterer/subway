@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { Router } from '@lit-labs/router';
 import { liveQuery } from 'dexie';
 import { dbFetchAll, dbUpdateNote, dbDeleteNote } from './db/db.js';
@@ -12,7 +12,23 @@ class AppRoot extends LitElement {
     notes: { type: Array }
   };
 
-  static styles = [globalStyles];
+  static styles = [globalStyles, css`
+    header {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      > h1 {
+        flex-grow: 1;
+      }
+
+      > a {
+        background: var(--brand-color);
+        color: black;
+        padding: 4px 8px;
+      }
+    }
+  `];
 
   notes: Note[] = [];
 
@@ -84,8 +100,7 @@ class AppRoot extends LitElement {
     return html`
       <header>
         <h1><a href="/">Subway Notes</a></h1>
-        <a href="/new?type=Note">New</a>
-        <a href="/new?type=List">New list</a>
+        <a href="/new?type=Note">+ New</a>
       </header>
 
       <main

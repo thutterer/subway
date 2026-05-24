@@ -126,7 +126,7 @@ class ListItem extends LitElement {
         <div class="add-row">
           <input
             @keydown=${this._onKeyDown}
-            placeholder="What next?"
+            placeholder="Add item..."
           />
           <button class="delete" @click=${this._addTask}>+</button>
         </div>
