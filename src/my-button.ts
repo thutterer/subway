@@ -6,6 +6,9 @@ export class MyButton extends LitElement {
     type: { type: String }
   };
 
+  disabled: boolean;
+  type: string;
+
   constructor() {
     super();
     this.disabled = false;

@@ -1,17 +1,15 @@
 import { LitElement, html, css } from 'lit';
 import './my-button.js';
 
-const formatTimestamp = (timestamp) => {
-  if (!timestamp) return '';
-  return new Date(timestamp).toLocaleString(undefined, {
+const formatTimestamp = (timestamp: number) =>
+  new Date(timestamp).toLocaleString(undefined, {
     dateStyle: 'short',
     timeStyle: 'short'
   });
-};
 
 class NoteItem extends LitElement {
   static properties = {
-    id: { type: Number },
+    noteId: { type: Number },
     text: { type: String },
     created_at: { type: Date },
   };
@@ -40,36 +38,26 @@ class NoteItem extends LitElement {
     }
   `;
 
-  constructor() {
-    super();
-    this.id = null;
-    this.text = '';
+  noteId!: number;
+  text!: string;
+  created_at!: number;
+
+  private _onInput(e: Event) {
+    const text = (e.target as HTMLTextAreaElement).value;
+    this.dispatchEvent(new CustomEvent('note-changed', {
+      detail: { id: this.noteId, text },
+      bubbles: true,
+      composed: true
+    }));
   }
 
-  _onInput(e) {
-    const newText = e.target.value;
-
-    // Create and dispatch a native browser event carrying the updated data
-    const event = new CustomEvent('note-changed', {
-      detail: { id: this.id, text: newText },
-      bubbles: true,    // Allows the event to travel up through parent elements
-      composed: true   // Allows the event to cross the Shadow DOM boundary
-    });
-
-    this.dispatchEvent(event);
-  }
-
-  _onDelete() {
-    const yes = confirm("Sure?")
-
-    if (yes) {
-      const event = new CustomEvent('note-delete', {
-        detail: { id: this.id },
+  private _onDelete() {
+    if (confirm("Sure?")) {
+      this.dispatchEvent(new CustomEvent('note-delete', {
+        detail: { id: this.noteId },
         bubbles: true,
         composed: true
-      })
-
-      this.dispatchEvent(event);
+      }));
     }
   }
 
@@ -77,7 +65,7 @@ class NoteItem extends LitElement {
     return html`
       <div class="note-card">
         <header>
-          <span><a href="/note/${this.id}">${formatTimestamp(this.created_at)}</a></span>
+          <span><a href="/note/${this.noteId}">${formatTimestamp(this.created_at)}</a></span>
           <my-button @click=${this._onDelete}>x</my-button>
         </header>
         <textarea

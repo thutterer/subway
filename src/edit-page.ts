@@ -1,35 +1,32 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import './my-button.js';
 import './note-item.js';
-import { dbFetchNoteById, dbDeleteNote, dbUpdateNote } from './db/db.js';
+import { dbFetchNoteById } from './db/db.js';
 
 class EditPage extends LitElement {
   static properties = {
-    id: { type: Number },
+    noteId: { type: Number },
     text: { type: String },
     type: { type: String },
-};
+  };
 
-  constructor() {
-    super();
-    this.id = null;
-    this.type = null;
-    this.text = '';
-    this.created_at = 0;
-  }
+  noteId!: number;
+  type = '';
+  text = '';
+  created_at = 0;
 
-  async _fetchRecord(id) {
-    const flup = await dbFetchNoteById(id);
-    if (flup) {
-      this.text = flup.text;
-      this.type = flup.type;
-      this.created_at = flup.created_at;
+  private async _fetchRecord(id: number) {
+    const note = await dbFetchNoteById(id);
+    if (note) {
+      this.text = note.text;
+      this.type = note.type ?? '';
+      this.created_at = note.created_at;
     }
   }
 
-  async willUpdate(changedProperties) {
-    if (changedProperties.has('id')) {
-      this._fetchRecord(this.id);
+  willUpdate(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has('noteId')) {
+      this._fetchRecord(this.noteId);
     }
   }
 
@@ -38,7 +35,7 @@ class EditPage extends LitElement {
       <h2>Edit ${this.type}</h2>
 
       <note-item
-        .id=${this.id}
+        .noteId=${this.noteId}
         .text=${this.text}
         .created_at=${this.created_at}
       ></note-item>

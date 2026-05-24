@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import type { Note } from './db/db.js';
 import './note-item.js';
 
 class NoteList extends LitElement {
@@ -19,20 +20,16 @@ class NoteList extends LitElement {
     }
   `;
 
-  constructor() {
-    super();
-    this.notes = [];
-  }
+  notes: Note[] = [];
 
   render() {
     return html`
       <div class="list-container">
         ${this.notes.map(note => html`
           <note-item
-            .id=${note.id}
+            .noteId=${note.id}
             .text=${note.text}
             .created_at=${note.created_at}>
-
           </note-item>
         `)}
 

@@ -1,7 +1,8 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import { Router } from '@lit-labs/router';
 import { liveQuery } from 'dexie';
-import { dbFetchAll, dbCreateNote, dbDeleteNote, dbUpdateNote } from './db/db.js';
+import { dbFetchAll, dbUpdateNote, dbDeleteNote } from './db/db.js';
+import type { Note } from './db/db.js';
 
 import { globalStyles } from './shared-styles.js';
 import './my-button.js';
@@ -11,91 +12,72 @@ class AppRoot extends LitElement {
     notes: { type: Array }
   };
 
-  static styles = [
-    globalStyles
-  ]
+  static styles = [globalStyles];
 
-  _navTo(event) {
-    const { id } = event.detail
-    const path = `/note/${id}`
-    window.history.pushState({}, '', path);
-    this.#router.goto(path)
-  }
+  notes: Note[] = [];
 
-  // Initialize the router controller
   #router = new Router(this, [
     {
       path: '/',
-      render: () => html`<note-list
-        .notes=${this.notes}
-      >
-      </note-list>`,
-      enter: async () => { await import('./note-list.js') },
+      render: () => html`<note-list .notes=${this.notes}></note-list>`,
+      enter: () => { import('./note-list.js'); return true; },
     },
     {
       path: '/new',
       render: () => {
-        const searchParams = new URLSearchParams(window.location.search);
-        let typeParam = searchParams.get('type') || '';
-        const allowedTypes = ['Note', 'List'];
-
-        if (!allowedTypes.includes(typeParam)) {
-          typeParam = allowedTypes[0];
-        }
-
+        const raw = new URLSearchParams(window.location.search).get('type') ?? '';
+        const type = ['Note', 'List'].includes(raw) ? raw : 'Note';
         return html`
           <new-page
-            .type=${typeParam}
-            @navigate-to=${this._navTo}>
+            .type=${type}
+            @navigate-to=${this.#onNavigate}>
           </new-page>
         `;
       },
-      enter: async (_params) => {
-        await import('./new-page.js');
-      },
+      enter: () => { import('./new-page.js'); return true; },
     },
     {
       path: '/note/:id',
-      render: (params) => html`<edit-page .id=${Number(params.id)}></edit-page>`,
-      enter: async (_params) => {
-        await import('./edit-page.js');
-      },
+      render: (params) => html`<edit-page .noteId=${Number(params.id)}></edit-page>`,
+      enter: () => { import('./edit-page.js'); return true; },
     },
     {
       path: '/*',
-      render: () => html`<h2>404 - Page Not Found</h2>`
+      render: () => html`<h2>404</h2>`
     }
   ]);
 
-  constructor() {
-    super();
-    this.notes = [];
-  }
+  #subscription?: { unsubscribe: () => void };
 
-  async connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
-
-    this.subscription = liveQuery(() => dbFetchAll()).subscribe({
+    this.#subscription = liveQuery(() => dbFetchAll()).subscribe({
       next: (data) => {
         this.notes = data;
-        this.requestUpdate();
       }
     });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.subscription.unsubscribe();
+    this.#subscription?.unsubscribe();
   }
 
-  async handleNoteUpdate(e) {
-    const { id, text } = e.detail;
-    await dbUpdateNote(id, text);
+  #onNavigate(e: Event) {
+    const { id } = (e as CustomEvent<{ id: number }>).detail;
+    const path = `/note/${id}`;
+    window.history.pushState({}, '', path);
+    this.#router.goto(path);
   }
 
-  async handleNoteDelete(e) {
-    const { id } = e.detail;
-    await dbDeleteNote(id);
+  #onNoteChanged(e: Event) {
+    const { id, text } = (e as CustomEvent<{ id: number; text: string }>).detail;
+    dbUpdateNote(id, text);
+  }
+
+  #onNoteDeleted(e: Event) {
+    const { id } = (e as CustomEvent<{ id: number }>).detail;
+    dbDeleteNote(id);
   }
 
   render() {
@@ -107,8 +89,8 @@ class AppRoot extends LitElement {
       </header>
 
       <main
-        @note-changed=${this.handleNoteUpdate}
-        @note-delete=${this.handleNoteDelete}
+        @note-changed=${this.#onNoteChanged}
+        @note-delete=${this.#onNoteDeleted}
       >
         ${this.#router.outlet()}
       </main>

@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit';
 import './my-button.js';
 import { dbCreateFoo } from './db/db.js';
 
@@ -8,29 +8,24 @@ class NewPage extends LitElement {
     type: { type: String }
   };
 
-  constructor() {
-    super();
-    this.type = 'Note';
+  text = '';
+  type: string = 'Note';
+
+  private _handleSelection(e: Event) {
+    this.type = (e.target as HTMLSelectElement).value;
   }
 
-  _handleSelection(event) {
-    this.type = event.target.value;
+  private _handleTextChange(e: Event) {
+    this.text = (e.target as HTMLTextAreaElement).value;
   }
 
-  _handleTextChange(event) {
-    this.text = event.target.value;
-  }
-
-  async _create() {
-    const newId = await dbCreateFoo(this.text, this.type)
-
-    const event = new CustomEvent('navigate-to', {
+  private async _create() {
+    const id = await dbCreateFoo(this.text, this.type);
+    this.dispatchEvent(new CustomEvent('navigate-to', {
       bubbles: true,
       composed: true,
-      detail: { id: newId }
-    });
-
-    this.dispatchEvent(event);
+      detail: { id }
+    }));
   }
 
   render() {
