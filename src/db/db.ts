@@ -1,30 +1,46 @@
-import Dexie from 'dexie';
+import Dexie, { type Dexie as DexieType, type Table } from 'dexie';
 
-// Initialize database
-export const db = new Dexie('SubwayNotes');
+export interface Note {
+  id?: number;
+  text: string;
+  type?: string;
+  pending_sync: number;
+  created_at: number;
+}
+
+type SubwayNotesDB = DexieType & {
+  notes: Table<Note, number>;
+};
+
+export const db = new Dexie('SubwayNotes') as SubwayNotesDB;
 
 db.version(1).stores({
   notes: '++id, text, pending_sync, created_at'
 });
 
-// Database Actions
-export const dbFetchAll = () => db.notes.orderBy('created_at').reverse().toArray();
+export const dbFetchAll = (): Promise<Note[]> =>
+  db.notes.orderBy('created_at').reverse().toArray();
 
-export const dbCreateNote = () => db.notes.add({
-  text: '',
-  pending_sync: 1,
-  created_at: Date.now()
-});
+export const dbCreateNote = (): Promise<number> =>
+  db.notes.add({
+    text: '',
+    pending_sync: 1,
+    created_at: Date.now()
+  });
 
-export const dbCreateFoo = (text, type) => db.notes.add({
-  text,
-  type,
-  pending_sync: 1,
-  created_at: Date.now()
-});
+export const dbCreateFoo = (text: string, type: string): Promise<number> =>
+  db.notes.add({
+    text,
+    type,
+    pending_sync: 1,
+    created_at: Date.now()
+  });
 
-export const dbUpdateNote = (id, text) => db.notes.update(id, { text, pending_sync: 1 });
+export const dbUpdateNote = (id: number, text: string): Promise<number> =>
+  db.notes.update(id, { text, pending_sync: 1 });
 
-export const dbDeleteNote = (id) => db.notes.delete(id);
+export const dbDeleteNote = (id: number): Promise<void> =>
+  db.notes.delete(id);
 
-export const dbFetchNoteById = (id) => db.notes.get(id);
+export const dbFetchNoteById = (id: number): Promise<Note | undefined> =>
+  db.notes.get(id);
