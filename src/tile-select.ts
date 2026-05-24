@@ -48,15 +48,13 @@ class TileSelect extends LitElement {
       font-family: "Silkscreen", monospace;
       font-size: 16px;
       box-shadow: 3px 3px 0 0 var(--shadow);
-      transition: transform 0.1s, box-shadow 0.1s;
+      transition: filter 0.1s;
     }
     .tile:hover {
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0 0 var(--shadow);
+      filter: brightness(1.08);
     }
     .tile:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 0 var(--shadow);
+      filter: brightness(0.95);
     }
     .tile.selected {
       background: var(--brand-color);
@@ -65,18 +63,14 @@ class TileSelect extends LitElement {
       box-shadow: 3px 3px 0 0 var(--shadow);
     }
     .tile.selected:hover {
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0 0 var(--shadow);
+      filter: brightness(1.08);
     }
     .tile.selected:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 0 var(--shadow);
+      filter: brightness(0.95);
     }
     .tile:disabled {
       opacity: 0.4;
       cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
     }
     .icon {
       font-size: 2rem;
