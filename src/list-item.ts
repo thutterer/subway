@@ -13,12 +13,12 @@ class ListItem extends LitElement {
   static styles = css`
     :host {
       display: block;
-      border: 1px solid #333;
+      border: 1px solid var(--border);
     }
 
     .track {
       height: 0.5rem;
-      background: #333;
+      background: var(--border);
     }
     .fill {
       height: 100%;
@@ -37,7 +37,7 @@ class ListItem extends LitElement {
       gap: 0.5rem;
       padding: 0.5rem;
       cursor: pointer;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid var(--border);
     }
     .task:last-of-type {
       border-bottom: none;
@@ -66,17 +66,17 @@ class ListItem extends LitElement {
       font-family: "Silkscreen", monospace;
       font-size: 1rem;
       padding: 0.25rem;
-      color: #999;
+      color: var(--text-muted);
     }
     .delete:hover {
-      color: #000;
+      color: var(--text-strong);
     }
 
     .add-row {
       display: flex;
       gap: 0.5rem;
       padding: 0.5rem;
-      border-top: 1px solid #ccc;
+      border-top: 1px solid var(--border-light);
     }
 
     .add-row input {
@@ -84,7 +84,7 @@ class ListItem extends LitElement {
       font-family: "Silkscreen", monospace;
       font-size: 1rem;
       padding: 0.25rem;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border-light);
       background: transparent;
     }
     .add-row input:focus {

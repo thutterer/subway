@@ -15,7 +15,7 @@ class NoteItem extends LitElement {
 
   static styles = css`
     .note-card {
-      border: 1px solid #ccc;
+      border: 1px solid var(--border-light);
     }
 
     textarea {

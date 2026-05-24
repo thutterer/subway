@@ -39,10 +39,10 @@ class EditPage extends LitElement {
       cursor: pointer;
       font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
-      color: #999;
+      color: var(--text-muted);
     }
     .edit-btn:hover {
-      color: #000;
+      color: var(--text-strong);
     }
     .delete {
       margin-top: 1rem;
@@ -51,10 +51,10 @@ class EditPage extends LitElement {
       cursor: pointer;
       font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
-      color: #999;
+      color: var(--text-muted);
     }
     .delete:hover {
-      color: #000;
+      color: var(--text-strong);
     }
   `;
 

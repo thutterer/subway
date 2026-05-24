@@ -1,8 +1,10 @@
 :root {
   --brand-color: wheat;
-}
-
-:root {
+  --border: #333;
+  --border-light: #ccc;
+  --text-muted: #999;
+  --text-subtle: #666;
+  --text-strong: #000;
   color-scheme: light dark;
   background-color: #ffffff;
 }
@@ -10,6 +12,11 @@
 @media (prefers-color-scheme: dark) {
   :root {
     background-color: #16171d;
+    --border: #555;
+    --border-light: #444;
+    --text-muted: #777;
+    --text-subtle: #888;
+    --text-strong: #ddd;
   }
 }
 

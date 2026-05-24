@@ -25,7 +25,7 @@ class NoteList extends LitElement {
       padding: 0.75rem 0.5rem;
       text-decoration: none;
       color: inherit;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid var(--border);
     }
     .row:last-child {
       border-bottom: none;
@@ -46,20 +46,20 @@ class NoteList extends LitElement {
     .date {
       font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
-      color: #ccc;
+      color: var(--text-muted);
       flex-shrink: 0;
     }
 
     .type {
       font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
-      color: #999;
+      color: var(--text-muted);
       flex-shrink: 0;
     }
 
     .empty {
       padding: 1rem 0;
-      color: #666;
+      color: var(--text-subtle);
       font-style: italic;
     }
   `;
