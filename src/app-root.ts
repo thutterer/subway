@@ -26,7 +26,13 @@ class AppRoot extends LitElement {
         background: var(--brand-color);
         color: black;
         padding: 4px 8px;
+
+        &:hover {
+          filter: brightness(1.1);
+          color: black:
+        }
       }
+
     }
   `];
 
