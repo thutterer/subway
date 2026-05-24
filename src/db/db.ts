@@ -12,7 +12,6 @@ export interface Note {
   text: string;
   type?: string;
   tasks?: Task[];
-  pending_sync: number;
   created_at: number;
 }
 
@@ -23,7 +22,7 @@ type SubwayNotesDB = DexieType & {
 export const db = new Dexie('SubwayNotes', { addons: [dexieCloud] }) as SubwayNotesDB;
 
 db.version(1).stores({
-  notes: '@id, text, pending_sync, created_at'
+  notes: '@id, created_at'
 });
 
 db.cloud.configure({
@@ -38,12 +37,11 @@ export const dbCreateFoo = (text: string, type: string): Promise<string> =>
     text,
     type,
     tasks: [],
-    pending_sync: 1,
     created_at: Date.now()
   });
 
 export const dbUpdateNote = (id: string, text: string, tasks?: Task[]): Promise<number> =>
-  db.notes.update(id, { text, tasks, pending_sync: 1 });
+  db.notes.update(id, { text, tasks });
 
 export const dbDeleteNote = (id: string): Promise<void> =>
   db.notes.delete(id);
