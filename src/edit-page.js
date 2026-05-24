@@ -20,7 +20,6 @@ class EditPage extends LitElement {
 
   async _fetchRecord(id) {
     const flup = await dbFetchNoteById(id);
-    console.log({id, flup})
     if (flup) {
       this.text = flup.text;
       this.type = flup.type;
@@ -39,6 +38,7 @@ class EditPage extends LitElement {
       <h2>Edit ${this.type}</h2>
 
       <note-item
+        .id=${this.id}
         .text=${this.text}
         .created_at=${this.created_at}
       ></note-item>
