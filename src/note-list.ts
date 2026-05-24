@@ -20,9 +20,10 @@ class NoteList extends LitElement {
 
     .row {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 0.5rem;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.25rem 0.5rem;
+      padding: 0.625rem 0.5rem;
       text-decoration: none;
       color: inherit;
       border-bottom: 1px solid var(--border);
@@ -35,26 +36,15 @@ class NoteList extends LitElement {
     }
 
     .text {
-      flex: 1;
+      flex: 1 1 100%;
       font-family: "Silkscreen", monospace;
       font-size: 1rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
-    .date {
+    .date, .type {
       font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
       color: var(--text-muted);
-      flex-shrink: 0;
-    }
-
-    .type {
-      font-family: "Silkscreen", monospace;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      flex-shrink: 0;
     }
 
     .empty {
