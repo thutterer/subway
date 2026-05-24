@@ -1,22 +1,27 @@
 :root {
+  --bg: #ffffff;
   --brand-color: wheat;
   --border: #333;
   --border-light: #ccc;
   --text-muted: #999;
   --text-subtle: #666;
   --text-strong: #000;
+  --surface: color-mix(in srgb, var(--bg), white 0%);
+  --shadow: color-mix(in srgb, var(--bg), black 25%);
   color-scheme: light dark;
-  background-color: #ffffff;
+  background-color: var(--bg);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    background-color: #16171d;
-    --border: #555;
-    --border-light: #444;
+    --bg: #16171d;
+    --border: color-mix(in srgb, var(--bg), white 10%);
+    --border-light: color-mix(in srgb, var(--bg), white 15%);
     --text-muted: #777;
     --text-subtle: #888;
     --text-strong: #ddd;
+    --surface: color-mix(in srgb, var(--bg), white 5%);
+    --shadow: color-mix(in srgb, var(--bg), black 40%);
   }
 }
 
