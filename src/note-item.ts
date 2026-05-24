@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit';
-import './my-button.js';
 
 const formatTimestamp = (timestamp: number) =>
   new Date(timestamp).toLocaleString(undefined, {
@@ -17,12 +16,6 @@ class NoteItem extends LitElement {
   static styles = css`
     .note-card {
       border: 1px solid #ccc;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     textarea {
@@ -51,23 +44,9 @@ class NoteItem extends LitElement {
     }));
   }
 
-  private _onDelete() {
-    if (confirm("Sure?")) {
-      this.dispatchEvent(new CustomEvent('note-delete', {
-        detail: { id: this.noteId },
-        bubbles: true,
-        composed: true
-      }));
-    }
-  }
-
   render() {
     return html`
       <div class="note-card">
-        <header>
-          <span><a href="/note/${this.noteId}">${formatTimestamp(this.created_at)}</a></span>
-          <my-button @click=${this._onDelete}>x</my-button>
-        </header>
         <textarea
           .value=${this.text}
           @input=${this._onInput}

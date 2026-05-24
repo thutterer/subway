@@ -1,6 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import type { Note } from './db/db.js';
-import './note-item.js';
+
+const formatTimestamp = (ts: number) =>
+  new Date(ts).toLocaleString(undefined, {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  });
 
 class NoteList extends LitElement {
   static properties = {
@@ -8,13 +13,52 @@ class NoteList extends LitElement {
   };
 
   static styles = css`
-    .list-container {
+    .list {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      padding: 1rem 0;
     }
-    .empty-state {
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 0.5rem;
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 1px solid #eee;
+    }
+    .row:last-child {
+      border-bottom: none;
+    }
+    .row:hover {
+      background: rgba(0,0,0,0.03);
+    }
+
+    .text {
+      flex: 1;
+      font-family: "Silkscreen", monospace;
+      font-size: 1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .date {
+      font-family: "Silkscreen", monospace;
+      font-size: 0.75rem;
+      color: #ccc;
+      flex-shrink: 0;
+    }
+
+    .type {
+      font-family: "Silkscreen", monospace;
+      font-size: 0.75rem;
+      color: #999;
+      flex-shrink: 0;
+    }
+
+    .empty {
+      padding: 1rem 0;
       color: #666;
       font-style: italic;
     }
@@ -23,22 +67,21 @@ class NoteList extends LitElement {
   notes: Note[] = [];
 
   render() {
-    return html`
-      <div class="list-container">
-        ${this.notes.map(note => html`
-          <note-item
-            .noteId=${note.id}
-            .text=${note.text}
-            .created_at=${note.created_at}>
-          </note-item>
-        `)}
+    if (this.notes.length === 0) {
+      return html`<p class="empty">No notes yet.</p>`;
+    }
 
-        ${this.notes.length === 0 ? html`
-          <p class="empty-state">No notes found. Tap "+ New Note" to start writing!</p>
-        ` : ''}
+    return html`
+      <div class="list" role="list">
+        ${this.notes.map(note => html`
+          <a class="row" role="listitem" href="/note/${note.id}">
+            <span class="text">${note.text || 'Untitled'}</span>
+            <span class="date">${formatTimestamp(note.created_at)}</span>
+            <span class="type">${note.type || 'Note'}</span>
+          </a>
+        `)}
       </div>
     `;
   }
 }
-
 customElements.define('note-list', NoteList);

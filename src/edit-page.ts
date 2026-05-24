@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit';
-import './my-button.js';
 import './note-item.js';
 import './list-item.js';
 import type { Task } from './db/db.js';
@@ -45,6 +44,18 @@ class EditPage extends LitElement {
     .edit-btn:hover {
       color: #000;
     }
+    .delete {
+      margin-top: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: "Silkscreen", monospace;
+      font-size: 0.75rem;
+      color: #999;
+    }
+    .delete:hover {
+      color: #000;
+    }
   `;
 
   noteId!: number;
@@ -67,6 +78,17 @@ class EditPage extends LitElement {
   willUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('noteId')) {
       this._fetchRecord(this.noteId);
+    }
+  }
+
+  private _delete() {
+    if (confirm("Delete this note?")) {
+      this.dispatchEvent(new CustomEvent('note-delete', {
+        detail: { id: this.noteId },
+        bubbles: true,
+        composed: true
+      }));
+      window.location.href = '/';
     }
   }
 
@@ -130,6 +152,7 @@ class EditPage extends LitElement {
             ></note-item>
           `
       }
+      <button class="delete" @click=${this._delete}>delete</button>
     `
   }
 }
