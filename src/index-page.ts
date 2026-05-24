@@ -13,6 +13,7 @@ class IndexPage extends LitElement {
       display: flex;
       gap: 1rem;
       align-items: center;
+      padding: 0 0.5rem;
     }
     header h1 {
       flex-grow: 1;
