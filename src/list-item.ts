@@ -13,7 +13,6 @@ class ListItem extends LitElement {
   static styles = css`
     :host {
       display: block;
-      border: 1px solid var(--border);
     }
 
     .track {
@@ -76,7 +75,6 @@ class ListItem extends LitElement {
       display: flex;
       gap: 0.5rem;
       padding: 0.5rem;
-      border-top: 1px solid var(--border-light);
     }
 
     .add-row input {
@@ -132,7 +130,7 @@ class ListItem extends LitElement {
     const pct = this.tasks.length > 0 ? (done / this.tasks.length) * 100 : 0;
 
     return html`
-      <div class="list-card">
+      <div>
         <div class="track"><div class="fill" style="width: ${pct}%"></div></div>
         ${this.tasks.map(task => html`
           <div class="task" @click=${() => this._toggleTask(task.id)}>
