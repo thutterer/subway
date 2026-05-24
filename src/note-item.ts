@@ -1,16 +1,9 @@
 import { LitElement, html, css } from 'lit';
 
-const formatTimestamp = (timestamp: number) =>
-  new Date(timestamp).toLocaleString(undefined, {
-    dateStyle: 'short',
-    timeStyle: 'short'
-  });
-
 class NoteItem extends LitElement {
   static properties = {
     noteId: {},
     text: { type: String },
-    created_at: { type: Number },
   };
 
   static styles = css`
@@ -33,7 +26,6 @@ class NoteItem extends LitElement {
 
   noteId!: string;
   text!: string;
-  created_at!: number;
 
   private _onInput(e: Event) {
     const text = (e.target as HTMLTextAreaElement).value;

@@ -1,15 +1,17 @@
 import { LitElement, html, css } from 'lit';
+import { liveQuery } from 'dexie';
 import './back-link.js';
 import './note-item.js';
 import './list-item.js';
 import type { Task } from './db/db.js';
-import { dbFetchNoteById } from './db/db.js';
+import { db } from './db/db.js';
 
 class EditPage extends LitElement {
   static properties = {
     noteId: {},
     text: { type: String },
     type: { type: String },
+    _editing: { state: true },
   };
 
   static styles = css`
@@ -73,26 +75,38 @@ class EditPage extends LitElement {
     }
   `;
 
-  noteId!: string;
+  noteId = '';
   type = '';
   text = '';
-  created_at = 0;
   private _tasks: Task[] = [];
-  private _editingTitle = false;
+  private _editing = false;
+  private _sub?: { unsubscribe: () => void };
 
-  private async _fetchRecord(id: string) {
-    const note = await dbFetchNoteById(id);
-    if (note) {
-      this.text = note.text;
-      this.type = note.type ?? '';
-      this.created_at = note.created_at;
-      this._tasks = note.tasks ?? [];
-    }
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.noteId) this._subscribe(this.noteId);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._sub?.unsubscribe();
+  }
+
+  private _subscribe(id: string) {
+    this._sub?.unsubscribe();
+    this._sub = liveQuery(() => db.notes.get(id)).subscribe({
+      next: (note) => {
+        if (!note) return;
+        this.text = note.text;
+        this.type = note.type ?? '';
+        this._tasks = note.tasks ?? [];
+      }
+    });
   }
 
   willUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('noteId')) {
-      this._fetchRecord(this.noteId);
+      this._subscribe(this.noteId);
     }
   }
 
@@ -108,18 +122,17 @@ class EditPage extends LitElement {
   }
 
   private _startEdit() {
-    this._editingTitle = true;
-    this.requestUpdate();
+    this._editing = true;
     this.updateComplete.then(() => {
       const input = this.renderRoot.querySelector<HTMLInputElement>('.title-input');
       input?.focus();
     });
   }
 
-  private _saveTitle(e: Event) {
+  private _save(e: Event) {
     const input = e.target as HTMLInputElement;
     this.text = input.value;
-    this._editingTitle = false;
+    this._editing = false;
     this.dispatchEvent(new CustomEvent('note-changed', {
       detail: { id: this.noteId, text: this.text, tasks: this._tasks },
       bubbles: true,
@@ -127,7 +140,7 @@ class EditPage extends LitElement {
     }));
   }
 
-  private _onTitleKeyDown(e: KeyboardEvent) {
+  private _onKeyDown(e: KeyboardEvent) {
     if (e.key === 'Enter' || e.key === 'Escape') {
       (e.target as HTMLInputElement).blur();
     }
@@ -149,8 +162,8 @@ class EditPage extends LitElement {
         ? html`
             <div class="list-header">
               <back-link></back-link>
-              ${this._editingTitle
-                ? html`<input class="title-input" .value=${this.text} @blur=${this._saveTitle} @keydown=${this._onTitleKeyDown} />`
+              ${this._editing
+                ? html`<input class="title-input" .value=${this.text} @blur=${this._save} @keydown=${this._onKeyDown} />`
                 : html`<span class="title-text">${this.text || 'Untitled'}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
               }
             </div>
@@ -167,7 +180,6 @@ class EditPage extends LitElement {
             <note-item
               .noteId=${this.noteId}
               .text=${this.text}
-              .created_at=${this.created_at}
             ></note-item>
           `
       }
