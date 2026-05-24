@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { Router } from '@lit-labs/router';
 import { liveQuery } from 'dexie';
 import { dbFetchAll, dbUpdateNote, dbDeleteNote } from './db/db.js';
-import type { Note } from './db/db.js';
+import type { Note, Task } from './db/db.js';
 
 import { globalStyles } from './shared-styles.js';
 import './my-button.js';
@@ -71,8 +71,8 @@ class AppRoot extends LitElement {
   }
 
   #onNoteChanged(e: Event) {
-    const { id, text } = (e as CustomEvent<{ id: number; text: string }>).detail;
-    dbUpdateNote(id, text);
+    const { id, text, tasks } = (e as CustomEvent<{ id: number; text: string; tasks?: Task[] }>).detail;
+    dbUpdateNote(id, text, tasks);
   }
 
   #onNoteDeleted(e: Event) {

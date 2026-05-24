@@ -1,10 +1,5 @@
 import { LitElement, html, css } from 'lit';
-
-export interface Task {
-  id: string;
-  text: string;
-  done: boolean;
-}
+import type { Task } from './db/db.js';
 
 class ListItem extends LitElement {
   static properties = {
@@ -14,7 +9,6 @@ class ListItem extends LitElement {
 
   noteId!: number;
   tasks: Task[] = [];
-  private _newText = '';
 
   static styles = css`
     :host {
@@ -85,15 +79,12 @@ class ListItem extends LitElement {
   `;
 
   private _addTask() {
-    const text = this._newText.trim();
+    const input = this.renderRoot.querySelector('input')!;
+    const text = input.value.trim();
     if (!text) return;
     this.tasks = [...this.tasks, { id: crypto.randomUUID(), text, done: false }];
-    this._newText = '';
+    input.value = '';
     this._dispatch();
-  }
-
-  private _onInput(e: Event) {
-    this._newText = (e.target as HTMLInputElement).value;
   }
 
   private _onKeyDown(e: KeyboardEvent) {
@@ -134,8 +125,6 @@ class ListItem extends LitElement {
 
         <div class="add-row">
           <input
-            .value=${this._newText}
-            @input=${this._onInput}
             @keydown=${this._onKeyDown}
             placeholder="What next?"
           />
