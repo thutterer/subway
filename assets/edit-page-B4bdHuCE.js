@@ -1,4 +1,4 @@
-import{a as e,i as t,o as n,r}from"./index-CefUoxtg.js";import"./back-link-ChxeW9vB.js";var i=class extends t{static{this.properties={noteId:{type:Number},text:{type:String},created_at:{type:Number}}}static{this.styles=n`
+import{a as e,i as t,o as n,r}from"./index-DMGzsd5Q.js";import"./back-link-dpVkORyQ.js";var i=class extends t{static{this.properties={noteId:{},text:{type:String},created_at:{type:Number}}}static{this.styles=n`
     .note-card {
       border: 1px solid var(--border-light);
     }
@@ -22,7 +22,7 @@ import{a as e,i as t,o as n,r}from"./index-CefUoxtg.js";import"./back-link-ChxeW
           placeholder="Start typing...">
         </textarea>
       </div>
-    `}};customElements.define(`note-item`,i);var a=class extends t{constructor(...e){super(...e),this.tasks=[]}static{this.properties={noteId:{type:Number},tasks:{type:Array}}}static{this.styles=n`
+    `}};customElements.define(`note-item`,i);var a=class extends t{constructor(...e){super(...e),this.tasks=[]}static{this.properties={noteId:{},tasks:{type:Array}}}static{this.styles=n`
     :host {
       display: block;
     }
@@ -119,7 +119,7 @@ import{a as e,i as t,o as n,r}from"./index-CefUoxtg.js";import"./back-link-ChxeW
           <button class="delete" @click=${this._addTask}>+</button>
         </div>
       </div>
-    `}};customElements.define(`list-item`,a);var o=class extends t{constructor(...e){super(...e),this.type=``,this.text=``,this.created_at=0,this._tasks=[],this._editingTitle=!1}static{this.properties={noteId:{type:Number},text:{type:String},type:{type:String}}}static{this.styles=n`
+    `}};customElements.define(`list-item`,a);var o=class extends t{constructor(...e){super(...e),this.type=``,this.text=``,this.created_at=0,this._tasks=[],this._editingTitle=!1}static{this.properties={noteId:{},text:{type:String},type:{type:String}}}static{this.styles=n`
     .list-header {
       display: flex;
       align-items: center;
