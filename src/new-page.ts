@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import './back-link.js';
 import './my-button.js';
 import './tile-select.js';
 import type { TileOption } from './tile-select.js';
@@ -16,13 +17,6 @@ class NewPage extends LitElement {
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
-    }
-    .back {
-      text-decoration: none;
-      color: var(--text-muted);
-    }
-    .back:hover {
-      color: var(--text-strong);
     }
   `;
 
@@ -54,7 +48,7 @@ class NewPage extends LitElement {
   render() {
     return html`
       <div class="header">
-        <a href="/" class="back">&lt;</a>
+        <back-link></back-link>
         <h2>New</h2>
       </div>
 
