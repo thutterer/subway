@@ -1,4 +1,4 @@
-import{a as e,i as t,o as n,r,t as i}from"./index-B6Ecrr9L.js";import"./back-link-DSpCliYP.js";var a=class extends t{static{this.properties={noteId:{},text:{type:String}}}static{this.styles=n`
+import{a as e,i as t,o as n,r,t as i}from"./index-Ceq89zcR.js";import"./back-link-pIKYS1cP.js";var a=class extends t{static{this.properties={noteId:{},text:{type:String}}}static{this.styles=n`
     .note-card {
       border: 1px solid var(--border-light);
     }

@@ -1,4 +1,4 @@
-import{a as e,i as t,o as n,t as r}from"./index-B6Ecrr9L.js";var i=n`
+import{a as e,i as t,o as n,t as r}from"./index-Ceq89zcR.js";var i=n`
   a {
     text-decoration: none;
     color: var(--brand-color);
@@ -78,7 +78,7 @@ import{a as e,i as t,o as n,t as r}from"./index-B6Ecrr9L.js";var i=n`
     header > a:hover, header .btn:hover {
       filter: brightness(0.9);
     }
-  `]}#e;#t;connectedCallback(){super.connectedCallback(),this.#e=!!r.cloud.currentUserId,this.#t=r.cloud.currentUser.subscribe(()=>{this.#e=!!r.cloud.currentUserId,this.requestUpdate()})}disconnectedCallback(){super.disconnectedCallback(),this.#t?.unsubscribe()}render(){let t=`/subway/`;return e`
+  `]}#e;#t;connectedCallback(){super.connectedCallback(),this.#e=r.cloud.currentUser.value.isLoggedIn===!0,this.#t=r.cloud.currentUser.subscribe(e=>{this.#e=e.isLoggedIn===!0,this.requestUpdate()})}disconnectedCallback(){super.disconnectedCallback(),this.#t?.unsubscribe()}render(){let t=`/subway/`;return e`
       <header>
         <h1><a href=${t}>Subway Notes</a></h1>
         <button class="btn" @click=${this.#e?r.cloud.logout:r.cloud.login}>
