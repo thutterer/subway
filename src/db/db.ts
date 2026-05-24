@@ -28,13 +28,6 @@ db.version(1).stores({
 export const dbFetchAll = (): Promise<Note[]> =>
   db.notes.orderBy('created_at').reverse().toArray();
 
-export const dbCreateNote = (): Promise<number> =>
-  db.notes.add({
-    text: '',
-    pending_sync: 1,
-    created_at: Date.now()
-  });
-
 export const dbCreateFoo = (text: string, type: string): Promise<number> =>
   db.notes.add({
     text,
