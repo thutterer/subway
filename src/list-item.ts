@@ -13,7 +13,22 @@ class ListItem extends LitElement {
   static styles = css`
     :host {
       display: block;
-      border: 1px solid #ccc;
+      border: 1px solid #333;
+    }
+
+    .track {
+      height: 0.5rem;
+      background: #333;
+    }
+    .fill {
+      height: 100%;
+      background: var(--brand-color, wheat);
+      transition: width 0.3s ease;
+      animation: shimmer 2s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.75; }
     }
 
     .task {
@@ -22,7 +37,7 @@ class ListItem extends LitElement {
       gap: 0.5rem;
       padding: 0.5rem;
       cursor: pointer;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #333;
     }
     .task:last-of-type {
       border-bottom: none;
@@ -113,8 +128,12 @@ class ListItem extends LitElement {
   }
 
   render() {
+    const done = this.tasks.filter(t => t.done).length;
+    const pct = this.tasks.length > 0 ? (done / this.tasks.length) * 100 : 0;
+
     return html`
       <div class="list-card">
+        <div class="track"><div class="fill" style="width: ${pct}%"></div></div>
         ${this.tasks.map(task => html`
           <div class="task" @click=${() => this._toggleTask(task.id)}>
             <span class="indicator">${task.done ? '☑' : '☐'}</span>
