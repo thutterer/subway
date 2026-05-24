@@ -10,7 +10,7 @@ class NoteItem extends LitElement {
   static properties = {
     noteId: { type: Number },
     text: { type: String },
-    created_at: { type: Date },
+    created_at: { type: Number },
   };
 
   static styles = css`
