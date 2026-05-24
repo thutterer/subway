@@ -1,4 +1,4 @@
-import{a as e,i as t,o as n,t as r}from"./index-DMGzsd5Q.js";var i=n`
+import{a as e,i as t,o as n,t as r}from"./index-B6Ecrr9L.js";var i=n`
   a {
     text-decoration: none;
     color: var(--brand-color);
@@ -54,7 +54,7 @@ import{a as e,i as t,o as n,t as r}from"./index-DMGzsd5Q.js";var i=n`
           </a>
         `)}
       </div>
-    `}};customElements.define(`note-list`,o);var s=class extends t{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=[i,n`
+    `}};customElements.define(`note-list`,o);var s=class extends t{constructor(...e){super(...e),this.notes=[],this.#e=!1}static{this.properties={notes:{type:Array}}}static{this.styles=[i,n`
     header {
       display: flex;
       gap: 1rem;
@@ -66,18 +66,24 @@ import{a as e,i as t,o as n,t as r}from"./index-DMGzsd5Q.js";var i=n`
       font-size: clamp(1.25rem, 4vw, 2rem);
       white-space: nowrap;
     }
-    header > a {
+    header > a, header .btn {
       background: var(--brand-color);
       color: black;
       padding: 4px 8px;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      font-size: 1rem;
     }
-    header > a:hover {
+    header > a:hover, header .btn:hover {
       filter: brightness(0.9);
     }
-  `]}render(){let t=`/subway/`;return e`
+  `]}#e;#t;connectedCallback(){super.connectedCallback(),this.#e=!!r.cloud.currentUserId,this.#t=r.cloud.currentUser.subscribe(()=>{this.#e=!!r.cloud.currentUserId,this.requestUpdate()})}disconnectedCallback(){super.disconnectedCallback(),this.#t?.unsubscribe()}render(){let t=`/subway/`;return e`
       <header>
         <h1><a href=${t}>Subway Notes</a></h1>
-        <button @click=${r.cloud.login}>Login</button>
+        <button class="btn" @click=${this.#e?r.cloud.logout:r.cloud.login}>
+          ${this.#e?`Logout`:`Login`}
+        </button>
         <a href="${t}new?type=Note">+ New</a>
       </header>
 

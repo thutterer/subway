@@ -1,4 +1,4 @@
-import{a as e,i as t,o as n,r}from"./index-DMGzsd5Q.js";import"./back-link-dpVkORyQ.js";var i=class extends t{static{this.properties={noteId:{},text:{type:String},created_at:{type:Number}}}static{this.styles=n`
+import{a as e,i as t,o as n,r,t as i}from"./index-B6Ecrr9L.js";import"./back-link-DSpCliYP.js";var a=class extends t{static{this.properties={noteId:{},text:{type:String}}}static{this.styles=n`
     .note-card {
       border: 1px solid var(--border-light);
     }
@@ -22,7 +22,7 @@ import{a as e,i as t,o as n,r}from"./index-DMGzsd5Q.js";import"./back-link-dpVkO
           placeholder="Start typing...">
         </textarea>
       </div>
-    `}};customElements.define(`note-item`,i);var a=class extends t{constructor(...e){super(...e),this.tasks=[]}static{this.properties={noteId:{},tasks:{type:Array}}}static{this.styles=n`
+    `}};customElements.define(`note-item`,a);var o=class extends t{constructor(...e){super(...e),this.tasks=[]}static{this.properties={noteId:{},tasks:{type:Array}}}static{this.styles=n`
     :host {
       display: block;
     }
@@ -119,7 +119,7 @@ import{a as e,i as t,o as n,r}from"./index-DMGzsd5Q.js";import"./back-link-dpVkO
           <button class="delete" @click=${this._addTask}>+</button>
         </div>
       </div>
-    `}};customElements.define(`list-item`,a);var o=class extends t{constructor(...e){super(...e),this.type=``,this.text=``,this.created_at=0,this._tasks=[],this._editingTitle=!1}static{this.properties={noteId:{},text:{type:String},type:{type:String}}}static{this.styles=n`
+    `}};customElements.define(`list-item`,o);var s=class extends t{constructor(...e){super(...e),this.noteId=``,this.type=``,this.text=``,this._tasks=[],this._editing=!1}static{this.properties={noteId:{},text:{type:String},type:{type:String},_editing:{state:!0}}}static{this.styles=n`
     .list-header {
       display: flex;
       align-items: center;
@@ -178,11 +178,11 @@ import{a as e,i as t,o as n,r}from"./index-DMGzsd5Q.js";import"./back-link-dpVkO
         }
       }
     }
-  `}async _fetchRecord(e){let t=await r(e);t&&(this.text=t.text,this.type=t.type??``,this.created_at=t.created_at,this._tasks=t.tasks??[])}willUpdate(e){e.has(`noteId`)&&this._fetchRecord(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/subway/`)}_startEdit(){this._editingTitle=!0,this.requestUpdate(),this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_saveTitle(e){let t=e.target;this.text=t.value,this._editingTitle=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onTitleKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return e`
+  `}connectedCallback(){super.connectedCallback(),this.noteId&&this._subscribe(this.noteId)}disconnectedCallback(){super.disconnectedCallback(),this._sub?.unsubscribe()}_subscribe(e){this._sub?.unsubscribe(),this._sub=r(()=>i.notes.get(e)).subscribe({next:e=>{e&&(this.text=e.text,this.type=e.type??``,this._tasks=e.tasks??[])}})}willUpdate(e){e.has(`noteId`)&&this._subscribe(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/subway/`)}_startEdit(){this._editing=!0,this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_save(e){let t=e.target;this.text=t.value,this._editing=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return e`
       ${this.type===`List`?e`
             <div class="list-header">
               <back-link></back-link>
-              ${this._editingTitle?e`<input class="title-input" .value=${this.text} @blur=${this._saveTitle} @keydown=${this._onTitleKeyDown} />`:e`<span class="title-text">${this.text||`Untitled`}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`}
+              ${this._editing?e`<input class="title-input" .value=${this.text} @blur=${this._save} @keydown=${this._onKeyDown} />`:e`<span class="title-text">${this.text||`Untitled`}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`}
             </div>
             <list-item
               .noteId=${this.noteId}
@@ -196,10 +196,9 @@ import{a as e,i as t,o as n,r}from"./index-DMGzsd5Q.js";import"./back-link-dpVkO
             <note-item
               .noteId=${this.noteId}
               .text=${this.text}
-              .created_at=${this.created_at}
             ></note-item>
           `}
       <div class="footer">
         <button class="delete" @click=${this._delete}>delete</button>
       </div>
-    `}};customElements.define(`edit-page`,o);
+    `}};customElements.define(`edit-page`,s);
