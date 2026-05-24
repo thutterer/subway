@@ -32,7 +32,7 @@ class NoteList extends LitElement {
       border-bottom: none;
     }
     .row:hover {
-      background: rgba(0,0,0,0.03);
+      background: rgba(128,128,128,0.12);
     }
 
     .text {
