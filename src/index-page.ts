@@ -16,6 +16,8 @@ class IndexPage extends LitElement {
     }
     header h1 {
       flex-grow: 1;
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      white-space: nowrap;
     }
     header > a {
       background: var(--brand-color);
