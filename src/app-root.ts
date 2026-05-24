@@ -26,7 +26,7 @@ class AppRoot extends LitElement {
     },
     {
       path: `${this.#base}note/:id`,
-      render: (params) => html`<edit-page .noteId=${Number(params.id)}></edit-page>`,
+      render: (params) => html`<edit-page .noteId=${params.id}></edit-page>`,
       enter: () => { import('./edit-page.js'); return true; },
     },
     {
@@ -52,19 +52,19 @@ class AppRoot extends LitElement {
   }
 
   #onNavigate(e: Event) {
-    const { id } = (e as CustomEvent<{ id: number }>).detail;
+    const { id } = (e as CustomEvent<{ id: string }>).detail;
     const path = `${this.#base}note/${id}`;
     window.history.pushState({}, '', path);
     this.#router.goto(path);
   }
 
   #onNoteChanged(e: Event) {
-    const { id, text, tasks } = (e as CustomEvent<{ id: number; text: string; tasks?: Task[] }>).detail;
+    const { id, text, tasks } = (e as CustomEvent<{ id: string; text: string; tasks?: Task[] }>).detail;
     dbUpdateNote(id, text, tasks);
   }
 
   #onNoteDeleted(e: Event) {
-    const { id } = (e as CustomEvent<{ id: number }>).detail;
+    const { id } = (e as CustomEvent<{ id: string }>).detail;
     dbDeleteNote(id);
   }
 

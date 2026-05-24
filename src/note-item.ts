@@ -8,7 +8,7 @@ const formatTimestamp = (timestamp: number) =>
 
 class NoteItem extends LitElement {
   static properties = {
-    noteId: { type: Number },
+    noteId: {},
     text: { type: String },
     created_at: { type: Number },
   };
@@ -31,7 +31,7 @@ class NoteItem extends LitElement {
     }
   `;
 
-  noteId!: number;
+  noteId!: string;
   text!: string;
   created_at!: number;
 

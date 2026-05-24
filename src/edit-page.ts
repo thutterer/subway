@@ -7,7 +7,7 @@ import { dbFetchNoteById } from './db/db.js';
 
 class EditPage extends LitElement {
   static properties = {
-    noteId: { type: Number },
+    noteId: {},
     text: { type: String },
     type: { type: String },
   };
@@ -73,14 +73,14 @@ class EditPage extends LitElement {
     }
   `;
 
-  noteId!: number;
+  noteId!: string;
   type = '';
   text = '';
   created_at = 0;
   private _tasks: Task[] = [];
   private _editingTitle = false;
 
-  private async _fetchRecord(id: number) {
+  private async _fetchRecord(id: string) {
     const note = await dbFetchNoteById(id);
     if (note) {
       this.text = note.text;

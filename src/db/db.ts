@@ -1,4 +1,5 @@
-import Dexie, { type Dexie as DexieType, type Table } from 'dexie';
+import Dexie, { type Dexie as DexieType } from 'dexie';
+import dexieCloud, { type DexieCloudTable } from 'dexie-cloud-addon';
 
 export interface Task {
   id: string;
@@ -7,7 +8,7 @@ export interface Task {
 }
 
 export interface Note {
-  id?: number;
+  id: string;
   text: string;
   type?: string;
   tasks?: Task[];
@@ -16,19 +17,23 @@ export interface Note {
 }
 
 type SubwayNotesDB = DexieType & {
-  notes: Table<Note, number>;
+  notes: DexieCloudTable<Note, 'id'>;
 };
 
-export const db = new Dexie('SubwayNotes') as SubwayNotesDB;
+export const db = new Dexie('SubwayNotes', { addons: [dexieCloud] }) as SubwayNotesDB;
 
 db.version(1).stores({
-  notes: '++id, text, pending_sync, created_at'
+  notes: '@id, text, pending_sync, created_at'
 });
+
+db.cloud.configure({
+  databaseUrl: "https://zmj6t0epw.dexie.cloud",
+})
 
 export const dbFetchAll = (): Promise<Note[]> =>
   db.notes.orderBy('created_at').reverse().toArray();
 
-export const dbCreateFoo = (text: string, type: string): Promise<number> =>
+export const dbCreateFoo = (text: string, type: string): Promise<string> =>
   db.notes.add({
     text,
     type,
@@ -37,11 +42,11 @@ export const dbCreateFoo = (text: string, type: string): Promise<number> =>
     created_at: Date.now()
   });
 
-export const dbUpdateNote = (id: number, text: string, tasks?: Task[]): Promise<number> =>
+export const dbUpdateNote = (id: string, text: string, tasks?: Task[]): Promise<number> =>
   db.notes.update(id, { text, tasks, pending_sync: 1 });
 
-export const dbDeleteNote = (id: number): Promise<void> =>
+export const dbDeleteNote = (id: string): Promise<void> =>
   db.notes.delete(id);
 
-export const dbFetchNoteById = (id: number): Promise<Note | undefined> =>
+export const dbFetchNoteById = (id: string): Promise<Note | undefined> =>
   db.notes.get(id);

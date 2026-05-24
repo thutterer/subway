@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import type { Note } from './db/db.js';
+import { db } from './db/db.js';
 import { globalStyles } from './shared-styles.js';
 import './note-list.js';
 
@@ -37,6 +38,7 @@ class IndexPage extends LitElement {
     return html`
       <header>
         <h1><a href=${base}>Subway Notes</a></h1>
+        <button @click=${db.cloud.login}>Login</button>
         <a href="${base}new?type=Note">+ New</a>
       </header>
 

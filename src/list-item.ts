@@ -3,11 +3,11 @@ import type { Task } from './db/db.js';
 
 class ListItem extends LitElement {
   static properties = {
-    noteId: { type: Number },
+    noteId: {},
     tasks: { type: Array }
   };
 
-  noteId!: number;
+  noteId!: string;
   tasks: Task[] = [];
 
   static styles = css`
