@@ -1,4 +1,4 @@
-import{a as e,i as t,n,r}from"./index-BQIAGXco.js";import"./back-link-C7voj_46.js";var i=class extends r{static{this.properties={noteId:{type:Number},text:{type:String},created_at:{type:Number}}}static{this.styles=e`
+import{a as e,i as t,n,r}from"./index-BoVbDRiX.js";import"./back-link-BuXtamuu.js";var i=class extends r{static{this.properties={noteId:{type:Number},text:{type:String},created_at:{type:Number}}}static{this.styles=e`
     .note-card {
       border: 1px solid var(--border-light);
     }
@@ -178,7 +178,7 @@ import{a as e,i as t,n,r}from"./index-BQIAGXco.js";import"./back-link-C7voj_46.j
         }
       }
     }
-  `}async _fetchRecord(e){let t=await n(e);t&&(this.text=t.text,this.type=t.type??``,this.created_at=t.created_at,this._tasks=t.tasks??[])}willUpdate(e){e.has(`noteId`)&&this._fetchRecord(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/`)}_startEdit(){this._editingTitle=!0,this.requestUpdate(),this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_saveTitle(e){let t=e.target;this.text=t.value,this._editingTitle=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onTitleKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return t`
+  `}async _fetchRecord(e){let t=await n(e);t&&(this.text=t.text,this.type=t.type??``,this.created_at=t.created_at,this._tasks=t.tasks??[])}willUpdate(e){e.has(`noteId`)&&this._fetchRecord(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/subway/`)}_startEdit(){this._editingTitle=!0,this.requestUpdate(),this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_saveTitle(e){let t=e.target;this.text=t.value,this._editingTitle=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onTitleKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return t`
       ${this.type===`List`?t`
             <div class="list-header">
               <back-link></back-link>

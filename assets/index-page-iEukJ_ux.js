@@ -1,4 +1,4 @@
-import{a as e,i as t,r as n}from"./index-BQIAGXco.js";var r=e`
+import{a as e,i as t,r as n}from"./index-BoVbDRiX.js";var r=e`
   a {
     text-decoration: none;
     color: var(--brand-color);
@@ -47,7 +47,7 @@ import{a as e,i as t,r as n}from"./index-BQIAGXco.js";var r=e`
   `}render(){return this.notes.length===0?t`<p class="empty">No notes yet.</p>`:t`
       <div class="list" role="list">
         ${this.notes.map(e=>t`
-          <a class="row" role="listitem" href="/note/${e.id}">
+          <a class="row" role="listitem" href="${`/subway/`}note/${e.id}">
             <span class="text">${e.text||`Untitled`}</span>
             <span class="date">${i(e.created_at)}</span>
             <span class="type">${e.type||`Note`}</span>
@@ -74,10 +74,10 @@ import{a as e,i as t,r as n}from"./index-BQIAGXco.js";var r=e`
     header > a:hover {
       filter: brightness(0.9);
     }
-  `]}render(){return t`
+  `]}render(){let e=`/subway/`;return t`
       <header>
-        <h1><a href="/">Subway Notes</a></h1>
-        <a href="/new?type=Note">+ New</a>
+        <h1><a href=${e}>Subway Notes</a></h1>
+        <a href="${e}new?type=Note">+ New</a>
       </header>
 
       <note-list .notes=${this.notes}></note-list>

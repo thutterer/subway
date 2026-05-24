@@ -1,4 +1,4 @@
-import{a as e,i as t,r as n}from"./index-BQIAGXco.js";var r=class extends n{constructor(...e){super(...e),this.href=`/`}static{this.properties={href:{type:String}}}static{this.styles=e`
+import{a as e,i as t,r as n}from"./index-BoVbDRiX.js";var r=class extends n{constructor(...e){super(...e),this.href=`/subway/`}static{this.properties={href:{type:String}}}static{this.styles=e`
     a {
       text-decoration: none;
       color: var(--text-muted);
