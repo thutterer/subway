@@ -36,7 +36,6 @@ class ListItem extends LitElement {
       gap: 0.5rem;
       padding: 0.5rem;
       cursor: pointer;
-      border-bottom: 1px solid var(--border);
     }
     .task:last-of-type {
       border-bottom: none;

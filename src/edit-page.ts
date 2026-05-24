@@ -17,7 +17,8 @@ class EditPage extends LitElement {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
     }
     .note-header {
       display: flex;
@@ -27,13 +28,13 @@ class EditPage extends LitElement {
     }
     .title-text {
       font-family: "Silkscreen", monospace;
-      font-size: 1rem;
+      font-size: 1.5rem;
     }
     .title-input {
       flex: 1;
       font-family: "Silkscreen", monospace;
-      font-size: 1rem;
-      padding: 0.25rem;
+      font-size: 1.5rem;
+      padding: 0;
       border: 1px solid var(--brand-color, wheat);
       background: transparent;
     }
@@ -51,17 +52,24 @@ class EditPage extends LitElement {
     .edit-btn:hover {
       color: var(--text-strong);
     }
-    .delete {
-      margin-top: 1rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: "Silkscreen", monospace;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-    .delete:hover {
-      color: var(--text-strong);
+
+    .footer {
+      display: flex;
+      justify-content: center;
+
+      .delete {
+        margin-top: 1rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: "Silkscreen", monospace;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+
+        &:hover {
+          color: var(--text-strong);
+        }
+      }
     }
   `;
 
@@ -163,7 +171,9 @@ class EditPage extends LitElement {
             ></note-item>
           `
       }
-      <button class="delete" @click=${this._delete}>delete</button>
+      <div class="footer">
+        <button class="delete" @click=${this._delete}>delete</button>
+      </div>
     `
   }
 }

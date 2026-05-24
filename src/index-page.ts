@@ -19,7 +19,7 @@ class IndexPage extends LitElement {
     }
     header > a {
       background: var(--brand-color);
-      color: var(--text-on-brand);
+      color: black;
       padding: 4px 8px;
     }
     header > a:hover {
