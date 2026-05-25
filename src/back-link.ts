@@ -1,11 +1,11 @@
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from "lit";
 
 class BackLink extends LitElement {
-  static properties = {
-    href: { type: String }
-  };
+	static properties = {
+		href: { type: String },
+	};
 
-  static styles = css`
+	static styles = css`
     a {
       text-decoration: none;
       color: var(--text-muted);
@@ -17,10 +17,10 @@ class BackLink extends LitElement {
     }
   `;
 
-  href = import.meta.env.BASE_URL;
+	href = import.meta.env.BASE_URL;
 
-  render() {
-    return html`<a href=${this.href}>&lt;</a>`;
-  }
+	render() {
+		return html`<a href=${this.href}>&lt;</a>`;
+	}
 }
-customElements.define('back-link', BackLink);
+customElements.define("back-link", BackLink);

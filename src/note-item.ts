@@ -1,12 +1,12 @@
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from "lit";
 
 class NoteItem extends LitElement {
-  static properties = {
-    noteId: {},
-    text: { type: String },
-  };
+	static properties = {
+		noteId: {},
+		text: { type: String },
+	};
 
-  static styles = css`
+	static styles = css`
     .note-card {
       border: 1px solid var(--border-light);
     }
@@ -25,20 +25,22 @@ class NoteItem extends LitElement {
     }
   `;
 
-  noteId!: string;
-  text!: string;
+	noteId!: string;
+	text!: string;
 
-  private _onInput(e: Event) {
-    const text = (e.target as HTMLTextAreaElement).value;
-    this.dispatchEvent(new CustomEvent('note-changed', {
-      detail: { id: this.noteId, text },
-      bubbles: true,
-      composed: true
-    }));
-  }
+	private _onInput(e: Event) {
+		const text = (e.target as HTMLTextAreaElement).value;
+		this.dispatchEvent(
+			new CustomEvent("note-changed", {
+				detail: { id: this.noteId, text },
+				bubbles: true,
+				composed: true,
+			}),
+		);
+	}
 
-  render() {
-    return html`
+	render() {
+		return html`
       <div class="note-card">
         <textarea
           .value=${this.text}
@@ -47,6 +49,6 @@ class NoteItem extends LitElement {
         </textarea>
       </div>
     `;
-  }
+	}
 }
-customElements.define('note-item', NoteItem);
+customElements.define("note-item", NoteItem);

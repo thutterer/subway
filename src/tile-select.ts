@@ -1,31 +1,33 @@
-import { LitElement, html, css, type TemplateResult } from 'lit';
+import { css, html, LitElement, type TemplateResult } from "lit";
 
 export interface TileOption {
-  value: string;
-  label: string;
-  icon: TemplateResult;
-  disabled?: boolean;
+	value: string;
+	label: string;
+	icon: TemplateResult;
+	disabled?: boolean;
 }
 
 class TileSelect extends LitElement {
-  static properties = {
-    options: { type: Array },
-    value: { type: String }
-  };
+	static properties = {
+		options: { type: Array },
+		value: { type: String },
+	};
 
-  options: TileOption[] = [];
-  value = '';
+	options: TileOption[] = [];
+	value = "";
 
-  private _onSelect(value: string) {
-    this.value = value;
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: { value },
-      bubbles: true,
-      composed: true
-    }));
-  }
+	private _onSelect(value: string) {
+		this.value = value;
+		this.dispatchEvent(
+			new CustomEvent("change", {
+				detail: { value },
+				bubbles: true,
+				composed: true,
+			}),
+		);
+	}
 
-  static styles = css`
+	static styles = css`
     :host {
       display: block;
     }
@@ -82,12 +84,13 @@ class TileSelect extends LitElement {
     }
   `;
 
-  render() {
-    return html`
+	render() {
+		return html`
       <div class="tiles" role="radiogroup">
-        ${this.options.map(opt => html`
+        ${this.options.map(
+					(opt) => html`
           <button
-            class="tile ${opt.value === this.value ? 'selected' : ''}"
+            class="tile ${opt.value === this.value ? "selected" : ""}"
             ?disabled=${opt.disabled}
             role="radio"
             aria-checked=${opt.value === this.value}
@@ -96,9 +99,10 @@ class TileSelect extends LitElement {
             <span class="icon">${opt.icon}</span>
             <span class="label">${opt.label}</span>
           </button>
-        `)}
+        `,
+				)}
       </div>
     `;
-  }
+	}
 }
-customElements.define('tile-select', TileSelect);
+customElements.define("tile-select", TileSelect);

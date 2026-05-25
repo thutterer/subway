@@ -1,18 +1,18 @@
-import { LitElement, html, css } from 'lit';
-import type { Note } from './db/db.js';
+import { css, html, LitElement } from "lit";
+import type { Note } from "./db/db.js";
 
 const formatTimestamp = (ts: number) =>
-  new Date(ts).toLocaleString(undefined, {
-    dateStyle: 'short',
-    timeStyle: 'short'
-  });
+	new Date(ts).toLocaleString(undefined, {
+		dateStyle: "short",
+		timeStyle: "short",
+	});
 
 class NoteList extends LitElement {
-  static properties = {
-    notes: { type: Array }
-  };
+	static properties = {
+		notes: { type: Array },
+	};
 
-  static styles = css`
+	static styles = css`
     .list {
       display: flex;
       flex-direction: column;
@@ -55,25 +55,27 @@ class NoteList extends LitElement {
     }
   `;
 
-  notes: Note[] = [];
+	notes: Note[] = [];
 
-  render() {
-    const base = import.meta.env.BASE_URL;
-    if (this.notes.length === 0) {
-      return html`<p class="empty">No notes yet.</p>`;
-    }
+	render() {
+		const base = import.meta.env.BASE_URL;
+		if (this.notes.length === 0) {
+			return html`<p class="empty">No notes yet.</p>`;
+		}
 
-    return html`
+		return html`
       <div class="list" role="list">
-        ${this.notes.map(note => html`
+        ${this.notes.map(
+					(note) => html`
           <a class="row" role="listitem" href="${base}note/${note.id}">
-            <span class="text">${note.text || 'Untitled'}</span>
+            <span class="text">${note.text || "Untitled"}</span>
             <span class="date">${formatTimestamp(note.created_at)}</span>
-            <span class="type">${note.type || 'Note'}</span>
+            <span class="type">${note.type || "Note"}</span>
           </a>
-        `)}
+        `,
+				)}
       </div>
     `;
-  }
+	}
 }
-customElements.define('note-list', NoteList);
+customElements.define("note-list", NoteList);

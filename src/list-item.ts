@@ -1,16 +1,16 @@
-import { LitElement, html, css } from 'lit';
-import type { Task } from './db/db.js';
+import { css, html, LitElement } from "lit";
+import type { Task } from "./db/db.js";
 
 class ListItem extends LitElement {
-  static properties = {
-    noteId: {},
-    tasks: { type: Array }
-  };
+	static properties = {
+		noteId: {},
+		tasks: { type: Array },
+	};
 
-  noteId!: string;
-  tasks: Task[] = [];
+	noteId!: string;
+	tasks: Task[] = [];
 
-  static styles = css`
+	static styles = css`
     :host {
       display: block;
     }
@@ -90,54 +90,63 @@ class ListItem extends LitElement {
     }
   `;
 
-  private _addTask() {
-    const input = this.renderRoot.querySelector('input')!;
-    const text = input.value.trim();
-    if (!text) return;
-    this.tasks = [...this.tasks, { id: crypto.randomUUID(), text, done: false }];
-    input.value = '';
-    this._dispatch();
-  }
+	private _addTask() {
+		const input = this.renderRoot.querySelector("input")!;
+		const text = input.value.trim();
+		if (!text) return;
+		this.tasks = [
+			...this.tasks,
+			{ id: crypto.randomUUID(), text, done: false },
+		];
+		input.value = "";
+		this._dispatch();
+	}
 
-  private _onKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      this._addTask();
-    }
-  }
+	private _onKeyDown(e: KeyboardEvent) {
+		if (e.key === "Enter") {
+			this._addTask();
+		}
+	}
 
-  private _toggleTask(id: string) {
-    this.tasks = this.tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
-    this._dispatch();
-  }
+	private _toggleTask(id: string) {
+		this.tasks = this.tasks.map((t) =>
+			t.id === id ? { ...t, done: !t.done } : t,
+		);
+		this._dispatch();
+	}
 
-  private _deleteTask(e: Event, id: string) {
-    e.stopPropagation();
-    this.tasks = this.tasks.filter(t => t.id !== id);
-    this._dispatch();
-  }
+	private _deleteTask(e: Event, id: string) {
+		e.stopPropagation();
+		this.tasks = this.tasks.filter((t) => t.id !== id);
+		this._dispatch();
+	}
 
-  private _dispatch() {
-    this.dispatchEvent(new CustomEvent('list-changed', {
-      detail: { id: this.noteId, tasks: this.tasks },
-      bubbles: true,
-      composed: true
-    }));
-  }
+	private _dispatch() {
+		this.dispatchEvent(
+			new CustomEvent("list-changed", {
+				detail: { id: this.noteId, tasks: this.tasks },
+				bubbles: true,
+				composed: true,
+			}),
+		);
+	}
 
-  render() {
-    const done = this.tasks.filter(t => t.done).length;
-    const pct = this.tasks.length > 0 ? (done / this.tasks.length) * 100 : 0;
+	render() {
+		const done = this.tasks.filter((t) => t.done).length;
+		const pct = this.tasks.length > 0 ? (done / this.tasks.length) * 100 : 0;
 
-    return html`
+		return html`
       <div>
         <div class="track"><div class="fill" style="width: ${pct}%"></div></div>
-        ${this.tasks.map(task => html`
+        ${this.tasks.map(
+					(task) => html`
           <div class="task" @click=${() => this._toggleTask(task.id)}>
-            <span class="indicator">${task.done ? '☑' : '☐'}</span>
-            <span class="text ${task.done ? 'done' : ''}">${task.text}</span>
+            <span class="indicator">${task.done ? "☑" : "☐"}</span>
+            <span class="text ${task.done ? "done" : ""}">${task.text}</span>
             <button class="delete" @click=${(e: Event) => this._deleteTask(e, task.id)}>x</button>
           </div>
-        `)}
+        `,
+				)}
 
         <div class="add-row">
           <input
@@ -148,6 +157,6 @@ class ListItem extends LitElement {
         </div>
       </div>
     `;
-  }
+	}
 }
-customElements.define('list-item', ListItem);
+customElements.define("list-item", ListItem);

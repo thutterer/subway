@@ -1,20 +1,20 @@
-import { LitElement, html, css } from 'lit';
-import { liveQuery } from 'dexie';
-import './back-link.js';
-import './note-item.js';
-import './list-item.js';
-import type { Task } from './db/db.js';
-import { db } from './db/db.js';
+import { liveQuery } from "dexie";
+import { css, html, LitElement } from "lit";
+import "./back-link.js";
+import "./note-item.js";
+import "./list-item.js";
+import type { Task } from "./db/db.js";
+import { db } from "./db/db.js";
 
 class EditPage extends LitElement {
-  static properties = {
-    noteId: {},
-    text: { type: String },
-    type: { type: String },
-    _editing: { state: true },
-  };
+	static properties = {
+		noteId: {},
+		text: { type: String },
+		type: { type: String },
+		_editing: { state: true },
+	};
 
-  static styles = css`
+	static styles = css`
     .list-header {
       display: flex;
       align-items: center;
@@ -75,97 +75,106 @@ class EditPage extends LitElement {
     }
   `;
 
-  noteId = '';
-  type = '';
-  text = '';
-  private _tasks: Task[] = [];
-  private _editing = false;
-  private _sub?: { unsubscribe: () => void };
+	noteId = "";
+	type = "";
+	text = "";
+	private _tasks: Task[] = [];
+	private _editing = false;
+	private _sub?: { unsubscribe: () => void };
 
-  connectedCallback() {
-    super.connectedCallback();
-    if (this.noteId) this._subscribe(this.noteId);
-  }
+	connectedCallback() {
+		super.connectedCallback();
+		if (this.noteId) this._subscribe(this.noteId);
+	}
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._sub?.unsubscribe();
-  }
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		this._sub?.unsubscribe();
+	}
 
-  private _subscribe(id: string) {
-    this._sub?.unsubscribe();
-    this._sub = liveQuery(() => db.notes.get(id)).subscribe({
-      next: (note) => {
-        if (!note) return;
-        this.text = note.text;
-        this.type = note.type ?? '';
-        this._tasks = note.tasks ?? [];
-      }
-    });
-  }
+	private _subscribe(id: string) {
+		this._sub?.unsubscribe();
+		this._sub = liveQuery(() => db.notes.get(id)).subscribe({
+			next: (note) => {
+				if (!note) return;
+				this.text = note.text;
+				this.type = note.type ?? "";
+				this._tasks = note.tasks ?? [];
+			},
+		});
+	}
 
-  willUpdate(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has('noteId')) {
-      this._subscribe(this.noteId);
-    }
-  }
+	willUpdate(changedProperties: Map<string, unknown>) {
+		if (changedProperties.has("noteId")) {
+			this._subscribe(this.noteId);
+		}
+	}
 
-  private _delete() {
-    if (confirm("Delete this note?")) {
-      this.dispatchEvent(new CustomEvent('note-delete', {
-        detail: { id: this.noteId },
-        bubbles: true,
-        composed: true
-      }));
-      window.location.href = import.meta.env.BASE_URL;
-    }
-  }
+	private _delete() {
+		if (confirm("Delete this note?")) {
+			this.dispatchEvent(
+				new CustomEvent("note-delete", {
+					detail: { id: this.noteId },
+					bubbles: true,
+					composed: true,
+				}),
+			);
+			window.location.href = import.meta.env.BASE_URL;
+		}
+	}
 
-  private _startEdit() {
-    this._editing = true;
-    this.updateComplete.then(() => {
-      const input = this.renderRoot.querySelector<HTMLInputElement>('.title-input');
-      input?.focus();
-    });
-  }
+	private _startEdit() {
+		this._editing = true;
+		this.updateComplete.then(() => {
+			const input =
+				this.renderRoot.querySelector<HTMLInputElement>(".title-input");
+			input?.focus();
+		});
+	}
 
-  private _save(e: Event) {
-    const input = e.target as HTMLInputElement;
-    this.text = input.value;
-    this._editing = false;
-    this.dispatchEvent(new CustomEvent('note-changed', {
-      detail: { id: this.noteId, text: this.text, tasks: this._tasks },
-      bubbles: true,
-      composed: true
-    }));
-  }
+	private _save(e: Event) {
+		const input = e.target as HTMLInputElement;
+		this.text = input.value;
+		this._editing = false;
+		this.dispatchEvent(
+			new CustomEvent("note-changed", {
+				detail: { id: this.noteId, text: this.text, tasks: this._tasks },
+				bubbles: true,
+				composed: true,
+			}),
+		);
+	}
 
-  private _onKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Enter' || e.key === 'Escape') {
-      (e.target as HTMLInputElement).blur();
-    }
-  }
+	private _onKeyDown(e: KeyboardEvent) {
+		if (e.key === "Enter" || e.key === "Escape") {
+			(e.target as HTMLInputElement).blur();
+		}
+	}
 
-  private _onListChanged(e: Event) {
-    const { tasks } = (e as CustomEvent<{ tasks: Task[] }>).detail;
-    this._tasks = tasks;
-    this.dispatchEvent(new CustomEvent('note-changed', {
-      detail: { id: this.noteId, text: this.text, tasks },
-      bubbles: true,
-      composed: true
-    }));
-  }
+	private _onListChanged(e: Event) {
+		const { tasks } = (e as CustomEvent<{ tasks: Task[] }>).detail;
+		this._tasks = tasks;
+		this.dispatchEvent(
+			new CustomEvent("note-changed", {
+				detail: { id: this.noteId, text: this.text, tasks },
+				bubbles: true,
+				composed: true,
+			}),
+		);
+	}
 
-  render() {
-    return html`
-      ${this.type === 'List'
-        ? html`
+	render() {
+		return html`
+      ${
+				this.type === "List"
+					? html`
             <div class="list-header">
               <back-link></back-link>
-              ${this._editing
-                ? html`<input class="title-input" .value=${this.text} @blur=${this._save} @keydown=${this._onKeyDown} />`
-                : html`<span class="title-text">${this.text || 'Untitled'}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
-              }
+              ${
+								this._editing
+									? html`<input class="title-input" .value=${this.text} @blur=${this._save} @keydown=${this._onKeyDown} />`
+									: html`<span class="title-text">${this.text || "Untitled"}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
+							}
             </div>
             <list-item
               .noteId=${this.noteId}
@@ -173,7 +182,7 @@ class EditPage extends LitElement {
               @list-changed=${this._onListChanged}
             ></list-item>
           `
-        : html`
+					: html`
             <div class="note-header">
               <back-link></back-link>
             </div>
@@ -182,12 +191,12 @@ class EditPage extends LitElement {
               .text=${this.text}
             ></note-item>
           `
-      }
+			}
       <div class="footer">
         <button class="delete" @click=${this._delete}>delete</button>
       </div>
-    `
-  }
+    `;
+	}
 }
 
-customElements.define('edit-page', EditPage);
+customElements.define("edit-page", EditPage);
