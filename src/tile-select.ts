@@ -1,9 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, type TemplateResult } from 'lit';
 
 export interface TileOption {
   value: string;
   label: string;
-  icon: string;
+  icon: TemplateResult;
   disabled?: boolean;
 }
 
@@ -73,8 +73,12 @@ class TileSelect extends LitElement {
       cursor: not-allowed;
     }
     .icon {
-      font-size: 2rem;
-      line-height: 1;
+      width: 2rem;
+      height: 2rem;
+    }
+    .icon svg {
+      width: 100%;
+      height: 100%;
     }
   `;
 
