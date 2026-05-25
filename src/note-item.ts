@@ -13,6 +13,7 @@ class NoteItem extends LitElement {
 
     textarea {
       width: 100%;
+      height: 80vh;
       background: transparent;
       border: none;
       resize: vertical;
