@@ -9,9 +9,11 @@ class BackLink extends LitElement {
     a {
       text-decoration: none;
       color: var(--text-muted);
-    }
-    a:hover {
-      color: var(--text-strong);
+      padding: 2px 8px;
+
+      &:hover {
+        color: var(--text-strong);
+      }
     }
   `;
 
