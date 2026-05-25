@@ -1,10 +1,11 @@
-import{a as e,i as t,o as n,r,t as i}from"./index-Ceq89zcR.js";import"./back-link-pIKYS1cP.js";var a=class extends t{static{this.properties={noteId:{},text:{type:String}}}static{this.styles=n`
+import{a as e,i as t,o as n,r,t as i}from"./index-CeHKuQv2.js";import"./back-link-DCkpG2CW.js";var a=class extends t{static{this.properties={noteId:{},text:{type:String}}}static{this.styles=n`
     .note-card {
       border: 1px solid var(--border-light);
     }
 
     textarea {
       width: 100%;
+      height: 80vh;
       background: transparent;
       border: none;
       resize: vertical;

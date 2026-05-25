@@ -1,4 +1,4 @@
-import{a as e,i as t,o as n,t as r}from"./index-Ceq89zcR.js";var i=n`
+import{a as e,i as t,o as n,t as r}from"./index-CeHKuQv2.js";var i=n`
   a {
     text-decoration: none;
     color: var(--brand-color);
@@ -43,6 +43,7 @@ import{a as e,i as t,o as n,t as r}from"./index-Ceq89zcR.js";var i=n`
       padding: 1rem 0;
       color: var(--text-subtle);
       font-style: italic;
+      text-align: center;
     }
   `}render(){return this.notes.length===0?e`<p class="empty">No notes yet.</p>`:e`
       <div class="list" role="list">
