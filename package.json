@@ -9,10 +9,14 @@
     "preview": "vite preview",
     "lint": "biome check src/",
     "format": "biome check --write src/",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "lint-staged": {
-    "*.ts": ["biome check --write"]
+    "*.ts": [
+      "biome check --write"
+    ]
   },
   "dependencies": {
     "@lit-labs/router": "^0.1.4",
@@ -22,6 +26,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
+    "@playwright/test": "^1.60.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.5",
     "typescript": "^6.0.3",
