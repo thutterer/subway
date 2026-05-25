@@ -51,6 +51,7 @@ class NoteList extends LitElement {
       padding: 1rem 0;
       color: var(--text-subtle);
       font-style: italic;
+      text-align: center;
     }
   `;
 
