@@ -108,6 +108,33 @@ class ListItem extends LitElement {
 		}
 	}
 
+	private _onPaste(e: ClipboardEvent) {
+		e.preventDefault();
+		const text = e.clipboardData?.getData("text");
+		if (!text) return;
+
+		const lines = text
+			.split("\n")
+			.map((l) => l.trim())
+			.filter(Boolean);
+
+		if (lines.length === 0) return;
+
+		if (lines.length > 1 && !confirm(`${lines.length} items will be added`))
+			return;
+
+		for (const line of lines) {
+			this.tasks = [
+				...this.tasks,
+				{ id: crypto.randomUUID(), text: line, done: false },
+			];
+		}
+		this._dispatch();
+
+		const input = this.renderRoot.querySelector("input")!;
+		input.value = "";
+	}
+
 	private _toggleTask(id: string) {
 		this.tasks = this.tasks.map((t) =>
 			t.id === id ? { ...t, done: !t.done } : t,
@@ -151,6 +178,7 @@ class ListItem extends LitElement {
         <div class="add-row">
           <input
             @keydown=${this._onKeyDown}
+            @paste=${this._onPaste}
             placeholder="Add item..."
           />
           <button class="delete" @click=${this._addTask}>+</button>
