@@ -9,24 +9,19 @@ import { db } from "./db/db.js";
 class EditPage extends LitElement {
 	static properties = {
 		noteId: {},
+		title: { type: String },
 		text: { type: String },
 		type: { type: String },
 		_editing: { state: true },
 	};
 
 	static styles = css`
-    .list-header {
+    .header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 2rem;
       margin-bottom: 1rem;
-    }
-    .note-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
     }
     .title-text {
       font-family: "Silkscreen", monospace;
@@ -76,6 +71,7 @@ class EditPage extends LitElement {
   `;
 
 	noteId = "";
+	title = "";
 	type = "";
 	text = "";
 	private _tasks: Task[] = [];
@@ -97,6 +93,7 @@ class EditPage extends LitElement {
 		this._sub = liveQuery(() => db.notes.get(id)).subscribe({
 			next: (note) => {
 				if (!note) return;
+				this.title = note.title ?? "";
 				this.text = note.text;
 				this.type = note.type ?? "";
 				this._tasks = note.tasks ?? [];
@@ -134,11 +131,16 @@ class EditPage extends LitElement {
 
 	private _save(e: Event) {
 		const input = e.target as HTMLInputElement;
-		this.text = input.value;
+		this.title = input.value;
 		this._editing = false;
 		this.dispatchEvent(
 			new CustomEvent("note-changed", {
-				detail: { id: this.noteId, text: this.text, tasks: this._tasks },
+				detail: {
+					id: this.noteId,
+					title: this.title,
+					text: this.text,
+					tasks: this._tasks,
+				},
 				bubbles: true,
 				composed: true,
 			}),
@@ -156,7 +158,7 @@ class EditPage extends LitElement {
 		this._tasks = tasks;
 		this.dispatchEvent(
 			new CustomEvent("note-changed", {
-				detail: { id: this.noteId, text: this.text, tasks },
+				detail: { id: this.noteId, title: this.title, text: this.text, tasks },
 				bubbles: true,
 				composed: true,
 			}),
@@ -165,17 +167,17 @@ class EditPage extends LitElement {
 
 	render() {
 		return html`
+      <div class="header">
+        <back-link></back-link>
+        ${
+					this._editing
+						? html`<input class="title-input" .value=${this.title} @blur=${this._save} @keydown=${this._onKeyDown} />`
+						: html`<span class="title-text">${this.title || "Untitled"}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
+				}
+      </div>
       ${
 				this.type === "List"
 					? html`
-            <div class="list-header">
-              <back-link></back-link>
-              ${
-								this._editing
-									? html`<input class="title-input" .value=${this.text} @blur=${this._save} @keydown=${this._onKeyDown} />`
-									: html`<span class="title-text">${this.text || "Untitled"}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
-							}
-            </div>
             <list-item
               .noteId=${this.noteId}
               .tasks=${this._tasks}
@@ -183,9 +185,6 @@ class EditPage extends LitElement {
             ></list-item>
           `
 					: html`
-            <div class="note-header">
-              <back-link></back-link>
-            </div>
             <note-item
               .noteId=${this.noteId}
               .text=${this.text}

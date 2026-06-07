@@ -69,10 +69,15 @@ class AppRoot extends LitElement {
 	}
 
 	#onNoteChanged(e: Event) {
-		const { id, text, tasks } = (
-			e as CustomEvent<{ id: string; text: string; tasks?: Task[] }>
+		const { id, text, tasks, title } = (
+			e as CustomEvent<{
+				id: string;
+				text: string;
+				tasks?: Task[];
+				title?: string;
+			}>
 		).detail;
-		dbUpdateNote(id, text, tasks);
+		dbUpdateNote(id, text, tasks, title);
 	}
 
 	#onNoteDeleted(e: Event) {

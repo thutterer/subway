@@ -17,8 +17,7 @@ test.describe("CRUD", () => {
 		await expect(page.locator("textarea")).toHaveValue("");
 
 		await page.locator("textarea").fill(text);
-
-		await page.locator("back-link").locator("a").click();
+		await page.goto("/");
 		await expect(page.getByText(text)).toBeVisible();
 	});
 
@@ -42,7 +41,7 @@ test.describe("CRUD", () => {
 		await taskInput.fill("Eggs");
 		await taskInput.press("Enter");
 
-		await page.locator("back-link").locator("a").click();
+		await page.goto("/");
 		await expect(page.getByText(title)).toBeVisible();
 	});
 
@@ -54,7 +53,7 @@ test.describe("CRUD", () => {
 		await page.getByText("Note", { exact: true }).click();
 		await expect(page.locator("textarea")).toBeVisible();
 		await page.locator("textarea").fill(text);
-		await page.locator("back-link").locator("a").click();
+		await page.goto("/");
 
 		await expect(page.getByText(text)).toBeVisible();
 		await page.getByText(text).click();

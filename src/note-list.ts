@@ -68,7 +68,7 @@ class NoteList extends LitElement {
         ${this.notes.map(
 					(note) => html`
           <a class="row" role="listitem" href="${base}note/${note.id}">
-            <span class="text">${note.text || "Untitled"}</span>
+            <span class="text">${note.title || "Untitled"}</span>
             <span class="date">${formatTimestamp(note.created_at)}</span>
             <span class="type">${note.type || "Note"}</span>
           </a>

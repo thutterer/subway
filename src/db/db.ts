@@ -10,6 +10,7 @@ export interface Task {
 export interface Note {
 	id: string;
 	text: string;
+	title?: string;
 	type?: string;
 	tasks?: Task[];
 	created_at: number;
@@ -34,8 +35,13 @@ db.cloud.configure({
 export const dbFetchAll = (): Promise<Note[]> =>
 	db.notes.orderBy("created_at").reverse().toArray();
 
-export const dbCreateFoo = (text: string, type: string): Promise<string> =>
+export const dbCreateFoo = (
+	text: string,
+	type: string,
+	title = "",
+): Promise<string> =>
 	db.notes.add({
+		title,
 		text,
 		type,
 		tasks: [],
@@ -46,7 +52,12 @@ export const dbUpdateNote = (
 	id: string,
 	text: string,
 	tasks?: Task[],
-): Promise<number> => db.notes.update(id, { text, tasks });
+	title?: string,
+): Promise<number> => {
+	const update: Partial<Note> = { text, tasks };
+	if (title !== undefined) update.title = title;
+	return db.notes.update(id, update);
+};
 
 export const dbDeleteNote = (id: string): Promise<void> => db.notes.delete(id);
 
