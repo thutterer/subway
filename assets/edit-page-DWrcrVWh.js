@@ -1,4 +1,4 @@
-import{a as e,i as t,o as n,r,t as i}from"./index-C4BPWTii.js";import"./back-link-BXU1bF1C.js";var a=class extends r{static{this.properties={noteId:{},text:{type:String}}}static{this.styles=e`
+import{a as e,i as t,o as n,r,t as i}from"./index-R2Q_2ygq.js";import"./back-link-CdZJgaVH.js";var a=class extends r{static{this.properties={noteId:{},text:{type:String}}}static{this.styles=e`
     .note-card {
       border: 1px solid var(--border-light);
     }
@@ -122,19 +122,13 @@ import{a as e,i as t,o as n,r,t as i}from"./index-C4BPWTii.js";import"./back-lin
           <button class="delete" @click=${this._addTask}>+</button>
         </div>
       </div>
-    `}};customElements.define(`list-item`,o);var s=class extends r{constructor(...e){super(...e),this.noteId=``,this.type=``,this.text=``,this._tasks=[],this._editing=!1}static{this.properties={noteId:{},text:{type:String},type:{type:String},_editing:{state:!0}}}static{this.styles=e`
-    .list-header {
+    `}};customElements.define(`list-item`,o);var s=class extends r{constructor(...e){super(...e),this.noteId=``,this.title=``,this.type=``,this.text=``,this._tasks=[],this._editing=!1}static{this.properties={noteId:{},title:{type:String},text:{type:String},type:{type:String},_editing:{state:!0}}}static{this.styles=e`
+    .header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 2rem;
       margin-bottom: 1rem;
-    }
-    .note-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
     }
     .title-text {
       font-family: "Silkscreen", monospace;
@@ -181,21 +175,18 @@ import{a as e,i as t,o as n,r,t as i}from"./index-C4BPWTii.js";import"./back-lin
         }
       }
     }
-  `}connectedCallback(){super.connectedCallback(),this.noteId&&this._subscribe(this.noteId)}disconnectedCallback(){super.disconnectedCallback(),this._sub?.unsubscribe()}_subscribe(e){this._sub?.unsubscribe(),this._sub=n(()=>i.notes.get(e)).subscribe({next:e=>{e&&(this.text=e.text,this.type=e.type??``,this._tasks=e.tasks??[])}})}willUpdate(e){e.has(`noteId`)&&this._subscribe(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/subway/`)}_startEdit(){this._editing=!0,this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_save(e){let t=e.target;this.text=t.value,this._editing=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return t`
+  `}connectedCallback(){super.connectedCallback(),this.noteId&&this._subscribe(this.noteId)}disconnectedCallback(){super.disconnectedCallback(),this._sub?.unsubscribe()}_subscribe(e){this._sub?.unsubscribe(),this._sub=n(()=>i.notes.get(e)).subscribe({next:e=>{e&&(this.title=e.title??``,this.text=e.text,this.type=e.type??``,this._tasks=e.tasks??[])}})}willUpdate(e){e.has(`noteId`)&&this._subscribe(this.noteId)}_delete(){confirm(`Delete this note?`)&&(this.dispatchEvent(new CustomEvent(`note-delete`,{detail:{id:this.noteId},bubbles:!0,composed:!0})),window.location.href=`/subway/`)}_startEdit(){this._editing=!0,this.updateComplete.then(()=>{this.renderRoot.querySelector(`.title-input`)?.focus()})}_save(e){let t=e.target;this.title=t.value,this._editing=!1,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,title:this.title,text:this.text,tasks:this._tasks},bubbles:!0,composed:!0}))}_onKeyDown(e){(e.key===`Enter`||e.key===`Escape`)&&e.target.blur()}_onListChanged(e){let{tasks:t}=e.detail;this._tasks=t,this.dispatchEvent(new CustomEvent(`note-changed`,{detail:{id:this.noteId,title:this.title,text:this.text,tasks:t},bubbles:!0,composed:!0}))}render(){return t`
+      <div class="header">
+        <back-link></back-link>
+        ${this._editing?t`<input class="title-input" .value=${this.title} @blur=${this._save} @keydown=${this._onKeyDown} />`:t`<span class="title-text">${this.title||`Untitled`}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`}
+      </div>
       ${this.type===`List`?t`
-            <div class="list-header">
-              <back-link></back-link>
-              ${this._editing?t`<input class="title-input" .value=${this.text} @blur=${this._save} @keydown=${this._onKeyDown} />`:t`<span class="title-text">${this.text||`Untitled`}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`}
-            </div>
             <list-item
               .noteId=${this.noteId}
               .tasks=${this._tasks}
               @list-changed=${this._onListChanged}
             ></list-item>
           `:t`
-            <div class="note-header">
-              <back-link></back-link>
-            </div>
             <note-item
               .noteId=${this.noteId}
               .text=${this.text}

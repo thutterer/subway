@@ -1,4 +1,4 @@
-import{a as e,i as t,n,r}from"./index-C4BPWTii.js";import"./back-link-BXU1bF1C.js";var i=class extends r{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`change`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=e`
+import{a as e,i as t,n,r}from"./index-R2Q_2ygq.js";import"./back-link-CdZJgaVH.js";var i=class extends r{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`change`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=e`
     :host {
       display: block;
     }

@@ -1,4 +1,4 @@
-import{a as e,i as t,r as n,t as r}from"./index-C4BPWTii.js";var i=e`
+import{a as e,i as t,r as n,t as r}from"./index-R2Q_2ygq.js";var i=e`
   a {
     text-decoration: none;
     color: var(--brand-color);
@@ -49,7 +49,7 @@ import{a as e,i as t,r as n,t as r}from"./index-C4BPWTii.js";var i=e`
       <div class="list" role="list">
         ${this.notes.map(e=>t`
           <a class="row" role="listitem" href="${`/subway/`}note/${e.id}">
-            <span class="text">${e.text||`Untitled`}</span>
+            <span class="text">${e.title||`Untitled`}</span>
             <span class="date">${a(e.created_at)}</span>
             <span class="type">${e.type||`Note`}</span>
           </a>
