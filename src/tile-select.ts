@@ -19,7 +19,7 @@ class TileSelect extends LitElement {
 	private _onSelect(value: string) {
 		this.value = value;
 		this.dispatchEvent(
-			new CustomEvent("change", {
+			new CustomEvent("tile-select", {
 				detail: { value },
 				bubbles: true,
 				composed: true,

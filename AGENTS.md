@@ -7,33 +7,38 @@
 | `npm run build` | Bundle + PWA service worker via `vite-plugin-pwa` |
 | `npm run preview` | Serve the production build locally |
 | `npx tsc --noEmit` | Type-check (Vite/esbuild handles transpilation; `tsc` is for checking only) |
-
-No test, lint, or formatter commands exist.
+| `npx playwright test e2e/` | Run 14 e2e tests (~9s) |
 
 ## Stack
-- **Lit 3** with `@lit-labs/router` — LitElement web components, no JSX
-- **Dexie** — IndexedDB wrapper, single `SubwayNotes` DB with one table: `notes: ++id, text, pending_sync, created_at`
-- **Vite** — bundler/ dev server
-- **vite-plugin-pwa** — generates service worker + manifest at build time (zero config, uses defaults)
-- **TypeScript** — checked via `tsc --noEmit`; Vite/esbuild handles transpilation at dev/build time
+- **Lit 3** with `@lit-labs/router` — LitElement web components, no JSX, Shadow DOM
+- **Dexie** — IndexedDB wrapper, single `SubwayNotes` DB: `notes: ++id, text, title?, type?, tasks?, created_at`
+- **Vite** — bundler/dev server
+- **vite-plugin-pwa** — generates service worker + manifest at build time (zero config)
+- **TypeScript** — checked via `tsc --noEmit`; Vite/esbuild handles transpilation
 
 ## Project structure
-- `index.html` → `/src/app-root.ts` — entrypoint, custom element `<app-root>`
+- `index.html` → `src/app-root.ts` — entrypoint, custom element `<app-root>`
 - `src/` — all components, flat layout
-- `src/db/db.ts` — Dexie CRUD: `dbFetchAll`, `dbCreateNote`, `dbCreateFoo`, `dbUpdateNote`, `dbDeleteNote`, `dbFetchNoteById`
-- `src/assets/` — Silkscreen .woff2 font
+- `src/db/db.ts` — Dexie CRUD: `dbFetchAll`, `dbCreateNote`, `dbUpdateNote`, `dbDeleteNote`
+- `src/assets/` — Silkscreen .woff2 font only
 
-## Important quirks
-- **Two create functions** in `db.ts`: `dbCreateNote()` (no args, empty text) is unused; `dbCreateFoo(text, type)` is what `new-page.ts` actually calls.
-- **Empty `src/fonts/`** directory — the Silkscreen font lives in `src/assets/`, loaded via `@font-face` in `src/index.css`.
-- **PWA** is generated at build time only; `vite-plugin-pwa` has no explicit config, so it uses plugin defaults.
-- `dbFetchNoteById` exists but is only used in `edit-page.ts`.
-- **Dexie Cloud addon** is conditionally loaded: only included in `addons` array when `VITE_DB_URL` is set. When absent, `db.cloud` is undefined so `index-page.ts` guards all cloud access with optional chaining. The schema uses `@id` (cloud) vs `id` (core Dexie) depending on URL presence. `dbCreateFoo` provides a `crypto.randomUUID()` ID when running without cloud.
-- **Fire-and-forget writes**: `edit-page.ts`'s `_save()` and `_delete()` dispatch events that trigger async `dbUpdateNote`/`dbDeleteNote` without awaiting them, then immediately navigate. Tests that verify persistence use `page.evaluate` to call the DB operations directly with proper awaiting, bypassing the button flow for write-reliability.
-- **E2E tests**: 9 tests in `e2e/spec.spec.ts` covering home page, navigation, note CRUD, title editing, delete, and list management. Run with `npx playwright test e2e/`.
+## Data flow
+- **Each component owns its writes.** `note-item.ts` calls `dbUpdateNote` directly on input. `edit-page.ts` calls `dbUpdateNote`/`dbDeleteNote` directly with `await` for title save, delete, and list changes.
+- **`note-item._onInput`** is fire-and-forget (real-time keystroke — intentional).
+- **`list-item` → `list-changed` → `edit-page._onListChanged`** — local 1-hop event so `edit-page` updates `this._tasks` immediately (avoiding stale data from `liveQuery` latency). `_onListChanged` awaits the write internally.
+- **`app-root.ts`** only runs a `liveQuery` subscription for the home-page note list and a `@navigate` handler for SPA routing. It no longer handles CRUD events.
+- **Navigation** is unified via `navigate` custom events (bubbles, composed) with `detail: { path }`. The `@navigate` listener on `<main>` uses `history.pushState` + `router.goto`.
+
+## Dexie Cloud addon
+Conditionally loaded in `db.ts` when `VITE_DB_URL` is set. Without it, `db.cloud` is `undefined` and `index-page.ts` guards all cloud access with optional chaining. Schema uses `@id` (cloud) vs `id` (core Dexie). `dbCreateNote` provides `crypto.randomUUID()` when running without cloud.
+
+## Test patterns
+- **14 e2e tests** in `e2e/spec.spec.ts` covering Index, Notes (CRUD, title edit, UI delete), Lists (CRUD, toggle, task delete, progress bar), and Navigation (back-link).
+- Each Playwright test gets a fresh browser context (isolated IndexedDB).
+- **List toggle/delete tests** use `page.waitForTimeout(300)` to let async IndexedDB writes settle before navigating. This is needed because the `list-item` → `edit-page._onListChanged` write is fire-and-forget from the event system's perspective.
 
 ## Style conventions
-- CSS custom property `--brand-color: wheat` in `src/index.css:root`; `color-scheme: light dark` with a media query for dark mode (`#16171d` background).
-- Shadows DOM is used throughout. Events cross shadow boundaries with `bubbles: true, composed: true`.
+- CSS custom property `--brand-color: wheat` in `src/index.css:root`; `color-scheme: light dark` with dark mode media query.
+- Shadow DOM throughout. Events cross boundaries with `bubbles: true, composed: true`.
 - Font: `"Silkscreen", monospace` globally.
 - No CSS preprocessor or CSS-in-JS — plain `css` tagged template literals in Lit components.

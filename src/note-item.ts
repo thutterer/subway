@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { highlightMarkdown } from "./markdown-highlight";
+import { dbUpdateNote } from "./db/db.js";
+import { highlightMarkdown } from "./markdown-highlight.js";
 
 class NoteItem extends LitElement {
 	static properties = {
@@ -81,13 +82,7 @@ class NoteItem extends LitElement {
 
 	private _onInput(e: Event) {
 		const text = (e.target as HTMLTextAreaElement).value;
-		this.dispatchEvent(
-			new CustomEvent("note-changed", {
-				detail: { id: this.noteId, text },
-				bubbles: true,
-				composed: true,
-			}),
-		);
+		dbUpdateNote(this.noteId, text);
 	}
 
 	render() {

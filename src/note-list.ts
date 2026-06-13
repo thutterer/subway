@@ -1,6 +1,8 @@
 import { css, html, LitElement } from "lit";
 import type { Note } from "./db/db.js";
 
+const base = import.meta.env.BASE_URL;
+
 const formatTimestamp = (ts: number) =>
 	new Date(ts).toLocaleString(undefined, {
 		dateStyle: "short",
@@ -58,7 +60,6 @@ class NoteList extends LitElement {
 	notes: Note[] = [];
 
 	render() {
-		const base = import.meta.env.BASE_URL;
 		if (this.notes.length === 0) {
 			return html`<p class="empty">No notes yet.</p>`;
 		}
@@ -67,7 +68,19 @@ class NoteList extends LitElement {
       <div class="list" role="list">
         ${this.notes.map(
 					(note) => html`
-          <a class="row" role="listitem" href="${base}note/${note.id}">
+          <a class="row" role="listitem" href="${base}note/${note.id}" @click=${(
+						e: MouseEvent,
+					) => {
+						e.preventDefault();
+						const path = "note/" + note.id;
+						this.dispatchEvent(
+							new CustomEvent("navigate", {
+								bubbles: true,
+								composed: true,
+								detail: { path },
+							}),
+						);
+					}}>
             <span class="text">${note.title || "Untitled"}</span>
             <span class="date">${formatTimestamp(note.created_at)}</span>
             <span class="type">${note.type || "Note"}</span>

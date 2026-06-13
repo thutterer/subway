@@ -1,10 +1,6 @@
 import { css, html, LitElement } from "lit";
 
 class BackLink extends LitElement {
-	static properties = {
-		href: { type: String },
-	};
-
 	static styles = css`
     a {
       text-decoration: none;
@@ -17,10 +13,19 @@ class BackLink extends LitElement {
     }
   `;
 
-	href = import.meta.env.BASE_URL;
+	#onClick(e: MouseEvent) {
+		e.preventDefault();
+		this.dispatchEvent(
+			new CustomEvent("navigate", {
+				bubbles: true,
+				composed: true,
+				detail: { path: "" },
+			}),
+		);
+	}
 
 	render() {
-		return html`<a href=${this.href}>&lt;</a>`;
+		return html`<a href="/" @click=${this.#onClick}>&lt;</a>`;
 	}
 }
 customElements.define("back-link", BackLink);

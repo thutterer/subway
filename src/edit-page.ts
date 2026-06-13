@@ -3,8 +3,7 @@ import { css, html, LitElement } from "lit";
 import "./back-link.js";
 import "./note-item.js";
 import "./list-item.js";
-import type { Task } from "./db/db.js";
-import { db } from "./db/db.js";
+import { db, dbDeleteNote, dbUpdateNote, type Task } from "./db/db.js";
 
 class EditPage extends LitElement {
 	static properties = {
@@ -107,17 +106,16 @@ class EditPage extends LitElement {
 		}
 	}
 
-	private _delete() {
-		if (confirm("Delete this note?")) {
-			this.dispatchEvent(
-				new CustomEvent("note-delete", {
-					detail: { id: this.noteId },
-					bubbles: true,
-					composed: true,
-				}),
-			);
-			window.location.href = import.meta.env.BASE_URL;
-		}
+	private async _delete() {
+		if (!confirm("Delete this note?")) return;
+		await dbDeleteNote(this.noteId);
+		this.dispatchEvent(
+			new CustomEvent("navigate", {
+				bubbles: true,
+				composed: true,
+				detail: { path: "" },
+			}),
+		);
 	}
 
 	private _startEdit() {
@@ -129,22 +127,11 @@ class EditPage extends LitElement {
 		});
 	}
 
-	private _save(e: Event) {
+	private async _save(e: Event) {
 		const input = e.target as HTMLInputElement;
 		this.title = input.value;
 		this._editing = false;
-		this.dispatchEvent(
-			new CustomEvent("note-changed", {
-				detail: {
-					id: this.noteId,
-					title: this.title,
-					text: this.text,
-					tasks: this._tasks,
-				},
-				bubbles: true,
-				composed: true,
-			}),
-		);
+		await dbUpdateNote(this.noteId, this.text, this._tasks, this.title);
 	}
 
 	private _onKeyDown(e: KeyboardEvent) {
@@ -153,16 +140,10 @@ class EditPage extends LitElement {
 		}
 	}
 
-	private _onListChanged(e: Event) {
+	private async _onListChanged(e: Event) {
 		const { tasks } = (e as CustomEvent<{ tasks: Task[] }>).detail;
 		this._tasks = tasks;
-		this.dispatchEvent(
-			new CustomEvent("note-changed", {
-				detail: { id: this.noteId, title: this.title, text: this.text, tasks },
-				bubbles: true,
-				composed: true,
-			}),
-		);
+		await dbUpdateNote(this.noteId, this.text, tasks, this.title);
 	}
 
 	render() {

@@ -2,8 +2,9 @@ import { css, html, LitElement } from "lit";
 import type { Subscription } from "rxjs";
 import type { Note } from "./db/db.js";
 import { db } from "./db/db.js";
-import { globalStyles } from "./shared-styles.js";
 import "./note-list.js";
+
+const base = import.meta.env.BASE_URL;
 
 const cloud = (db as any).cloud as
 	| {
@@ -23,9 +24,10 @@ class IndexPage extends LitElement {
 		notes: { type: Array },
 	};
 
-	static styles = [
-		globalStyles,
-		css`
+	static styles = css`
+    a {
+      color: var(--brand-color);
+    }
     header {
       display: flex;
       gap: 1rem;
@@ -49,8 +51,7 @@ class IndexPage extends LitElement {
     header > a:hover, header .btn:hover {
       filter: brightness(0.9);
     }
-  `,
-	];
+  `;
 
 	notes: Note[] = [];
 	#loggedIn = false;
@@ -72,11 +73,32 @@ class IndexPage extends LitElement {
 		this.#sub?.unsubscribe();
 	}
 
+	#onHomeClick(e: MouseEvent) {
+		e.preventDefault();
+		this.dispatchEvent(
+			new CustomEvent("navigate", {
+				bubbles: true,
+				composed: true,
+				detail: { path: "" },
+			}),
+		);
+	}
+
+	#onNewClick(e: MouseEvent) {
+		e.preventDefault();
+		this.dispatchEvent(
+			new CustomEvent("navigate", {
+				bubbles: true,
+				composed: true,
+				detail: { path: "new" },
+			}),
+		);
+	}
+
 	render() {
-		const base = import.meta.env.BASE_URL;
 		return html`
       <header>
-        <h1><a href=${base}>Subway Notes</a></h1>
+        <h1><a href=${base} @click=${this.#onHomeClick}>Subway Notes</a></h1>
         ${
 					cloud
 						? html`
@@ -86,7 +108,7 @@ class IndexPage extends LitElement {
         `
 						: ""
 				}
-        <a href="${base}new?type=Note">+ New</a>
+        <a href="${base}new" @click=${this.#onNewClick}>+ New</a>
       </header>
 
       <note-list .notes=${this.notes}></note-list>

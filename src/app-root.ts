@@ -1,8 +1,8 @@
 import { Router } from "@lit-labs/router";
 import { liveQuery } from "dexie";
 import { html, LitElement } from "lit";
-import type { Note, Task } from "./db/db.js";
-import { dbDeleteNote, dbFetchAll, dbUpdateNote } from "./db/db.js";
+import type { Note } from "./db/db.js";
+import { dbFetchAll } from "./db/db.js";
 
 class AppRoot extends LitElement {
 	static properties = {
@@ -24,8 +24,7 @@ class AppRoot extends LitElement {
 		},
 		{
 			path: `${this.#base}new`,
-			render: () =>
-				html`<new-page @navigate-to=${this.#onNavigate}></new-page>`,
+			render: () => html`<new-page></new-page>`,
 			enter: () => {
 				import("./new-page.js");
 				return true;
@@ -62,35 +61,15 @@ class AppRoot extends LitElement {
 	}
 
 	#onNavigate(e: Event) {
-		const { id } = (e as CustomEvent<{ id: string }>).detail;
-		const path = `${this.#base}note/${id}`;
-		window.history.pushState({}, "", path);
-		this.#router.goto(path);
-	}
-
-	#onNoteChanged(e: Event) {
-		const { id, text, tasks, title } = (
-			e as CustomEvent<{
-				id: string;
-				text: string;
-				tasks?: Task[];
-				title?: string;
-			}>
-		).detail;
-		dbUpdateNote(id, text, tasks, title);
-	}
-
-	#onNoteDeleted(e: Event) {
-		const { id } = (e as CustomEvent<{ id: string }>).detail;
-		dbDeleteNote(id);
+		const { path } = (e as CustomEvent<{ path: string }>).detail;
+		const full = `${this.#base}${path}`;
+		window.history.pushState({}, "", full);
+		this.#router.goto(full);
 	}
 
 	render() {
 		return html`
-      <main
-        @note-changed=${this.#onNoteChanged}
-        @note-delete=${this.#onNoteDeleted}
-      >
+      <main @navigate=${this.#onNavigate}>
         ${this.#router.outlet()}
       </main>
     `;

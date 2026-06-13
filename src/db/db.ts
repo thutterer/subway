@@ -37,7 +37,7 @@ if (dbUrl) {
 export const dbFetchAll = (): Promise<Note[]> =>
 	db.notes.orderBy("created_at").reverse().toArray();
 
-export const dbCreateFoo = (
+export const dbCreateNote = (
 	text: string,
 	type: string,
 	title = "",
@@ -57,12 +57,10 @@ export const dbUpdateNote = (
 	tasks?: Task[],
 	title?: string,
 ): Promise<number> => {
-	const update: Partial<Note> = { text, tasks };
+	const update: Partial<Note> = { text };
+	if (tasks !== undefined) update.tasks = tasks;
 	if (title !== undefined) update.title = title;
 	return db.notes.update(id, update);
 };
 
 export const dbDeleteNote = (id: string): Promise<void> => db.notes.delete(id);
-
-export const dbFetchNoteById = (id: string): Promise<Note | undefined> =>
-	db.notes.get(id);
