@@ -49,6 +49,7 @@ class ListItem extends LitElement {
     }
 
     .text {
+      font-family: "Silkscreen", monospace;
       flex: 1;
       font-size: 1rem;
     }
@@ -58,6 +59,7 @@ class ListItem extends LitElement {
     }
 
     .delete {
+      font-family: "Silkscreen", monospace;
       flex-shrink: 0;
       background: none;
       border: none;
@@ -77,6 +79,7 @@ class ListItem extends LitElement {
     }
 
     .add-row input {
+      font-family: "Silkscreen", monospace;
       flex: 1;
       font-size: 1rem;
       padding: 0.25rem;

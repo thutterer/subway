@@ -30,9 +30,11 @@ class EditPage extends LitElement {
       margin-bottom: 1rem;
     }
     .title-text {
+      font-family: "Silkscreen", monospace;
       font-size: 1.5rem;
     }
     .title-input {
+      font-family: "Silkscreen", monospace;
       flex: 1;
       font-size: 1.5rem;
       padding: 0;
@@ -43,6 +45,7 @@ class EditPage extends LitElement {
       outline: none;
     }
     .edit-btn {
+      font-family: "Silkscreen", monospace;
       background: none;
       border: none;
       cursor: pointer;
@@ -54,6 +57,7 @@ class EditPage extends LitElement {
     }
 
     .block-btn {
+      font-family: "Silkscreen", monospace;
       background: none;
       border: 1px solid var(--border-light);
       cursor: pointer;
@@ -129,6 +133,7 @@ class EditPage extends LitElement {
       justify-content: center;
 
       .delete {
+        font-family: "Silkscreen", monospace;
         margin-top: 1rem;
         background: none;
         border: none;

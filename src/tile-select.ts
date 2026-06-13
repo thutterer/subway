@@ -36,6 +36,7 @@ class TileSelect extends LitElement {
       gap: 1rem;
     }
     .tile {
+      font-family: "Silkscreen", monospace;
       flex-grow: 1;
       display: flex;
       flex-direction: column;

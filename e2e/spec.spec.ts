@@ -268,6 +268,135 @@ test.describe("Lists", () => {
 	});
 });
 
+test.describe("Blocks", () => {
+	test("insert blocks of all types and persist across reload", async ({
+		page,
+	}) => {
+		const text = `text-${uid()}`;
+		const task = `task-${uid()}`;
+
+		await page.goto("/");
+		await page.getByText("+ New").click();
+		await page.getByText("Note", { exact: true }).click();
+		await page.locator("textarea").waitFor({ state: "visible" });
+		await page.locator("textarea").fill(text);
+
+		// Add a list block after the first text block (inserter at position 1)
+		await page
+			.locator(".inserter")
+			.nth(1)
+			.locator(".ins-pill")
+			.click({ force: true });
+		await page.getByRole("button", { name: "List" }).click();
+		await page.getByPlaceholder("Add item...").fill(task);
+		await page.getByPlaceholder("Add item...").press("Enter");
+
+		// Add a divider after the list block (inserter at position 2)
+		await page
+			.locator(".inserter")
+			.nth(2)
+			.locator(".ins-pill")
+			.click({ force: true });
+		await page.getByRole("button", { name: "---" }).click();
+
+		// Add a text block after the divider (inserter at position 3)
+		await page
+			.locator(".inserter")
+			.nth(3)
+			.locator(".ins-pill")
+			.click({ force: true });
+		await page.getByRole("button", { name: "Text" }).click();
+		await page.locator("textarea").nth(1).fill("After divider");
+
+		await expect(page.locator("textarea")).toHaveCount(2);
+		await expect(page.locator("list-item")).toBeVisible();
+		await expect(page.locator("divider-item")).toBeVisible();
+
+		await page.waitForTimeout(300);
+
+		// Reload and verify all blocks persisted
+		await page.goto("/");
+		await page.getByText("Untitled").click();
+		await page.waitForURL(/\/note\//);
+		await page.locator("textarea").first().waitFor({ state: "visible" });
+
+		await expect(page.locator("textarea").first()).toHaveValue(text);
+		await expect(page.locator("textarea").nth(1)).toHaveValue("After divider");
+		await expect(page.locator("list-item")).toBeVisible();
+		await expect(page.locator("divider-item")).toBeVisible();
+		await expect(page.getByText(task)).toBeVisible();
+	});
+
+	test("delete a block", async ({ page }) => {
+		await page.goto("/");
+		await page.getByText("+ New").click();
+		await page.getByText("Note", { exact: true }).click();
+		await page.locator("textarea").waitFor({ state: "visible" });
+		await page.locator("textarea").fill("Block A");
+
+		// Add a second text block
+		await page
+			.locator(".inserter")
+			.nth(1)
+			.locator(".ins-pill")
+			.click({ force: true });
+		await page.getByRole("button", { name: "Text" }).click();
+		await page.locator("textarea").nth(1).fill("Block B");
+
+		await expect(page.locator("textarea")).toHaveCount(2);
+
+		// Delete the first block
+		page.once("dialog", (dialog) => dialog.accept());
+		await page
+			.locator(".block-group")
+			.first()
+			.locator(".block-actions button")
+			.click({ force: true });
+
+		await expect(page.locator("textarea")).toHaveCount(1);
+		await expect(page.locator("textarea")).toHaveValue("Block B");
+
+		await page.waitForTimeout(300);
+
+		// Reload and verify deletion persisted
+		await page.goto("/");
+		await page.getByText("Untitled").click();
+		await page.waitForURL(/\/note\//);
+		await page.locator("textarea").waitFor({ state: "visible" });
+
+		await expect(page.locator("textarea")).toHaveCount(1);
+		await expect(page.locator("textarea")).toHaveValue("Block B");
+	});
+
+	test("display type on home page for multi-block docs", async ({ page }) => {
+		// A doc starting with a text block shows "Note"
+		await page.goto("/");
+		await page.getByText("+ New").click();
+		await page.getByText("Note", { exact: true }).click();
+		await page.locator("textarea").waitFor({ state: "visible" });
+
+		// Add a list block as second block
+		await page
+			.locator(".inserter")
+			.nth(1)
+			.locator(".ins-pill")
+			.click({ force: true });
+		await page.getByRole("button", { name: "List" }).click();
+		await page.getByPlaceholder("Add item...").waitFor({ state: "visible" });
+
+		await page.goto("/");
+		await expect(page.locator(".type")).toHaveText("Note");
+
+		// A doc starting with a list block shows "List"
+		await page.getByText("+ New").click();
+		await page.getByText("List", { exact: true }).click();
+		await page.getByPlaceholder("Add item...").waitFor({ state: "visible" });
+
+		await page.goto("/");
+		await expect(page.locator(".type")).toHaveText(["List", "Note"]);
+	});
+});
+
 test.describe("Navigation", () => {
 	test("back-link navigates home from creation page", async ({ page }) => {
 		await page.goto("/new");
