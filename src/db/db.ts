@@ -90,11 +90,11 @@ export const dbCreateDoc = (blockType: Block["type"]): Promise<string> => {
 			? { type: "list", items: [] }
 			: { type: "text", markdown: "" };
 	return db.docs.add({
-		id: crypto.randomUUID(),
+		id: dbUrl ? undefined : crypto.randomUUID(),
 		title: "",
 		blocks: [block],
 		created_at: Date.now(),
-	});
+	} as any);
 };
 
 export const dbUpdateDoc = (
