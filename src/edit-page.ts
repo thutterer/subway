@@ -18,6 +18,7 @@ class EditPage extends LitElement {
 		title: { type: String },
 		_blocks: { state: true },
 		_editing: { state: true },
+		_openInserter: { state: true },
 	};
 
 	static styles = css`
@@ -84,13 +85,26 @@ class EditPage extends LitElement {
       border-color: var(--text-muted);
     }
 
-    .add-bar {
+    .inserter {
       display: flex;
       justify-content: center;
+      padding: 0.25rem 0;
+    }
+
+    .ins-pill {
+      opacity: 0.4;
+      transition: opacity 0.15s;
+      font-size: 0.7rem;
+      padding: 1px 8px;
+      border-radius: 0;
+    }
+    .inserter:hover .ins-pill {
+      opacity: 0.8;
+    }
+
+    .ins-expanded {
+      display: flex;
       gap: 0.5rem;
-      padding: 0.75rem 0;
-      border-top: 1px solid var(--border-light);
-      margin-top: 0.5rem;
     }
 
     .footer {
@@ -117,6 +131,7 @@ class EditPage extends LitElement {
 	title = "";
 	private _blocks: Block[] = [];
 	private _editing = false;
+	private _openInserter: number | null = null;
 	private _sub?: { unsubscribe: () => void };
 
 	connectedCallback() {
@@ -196,7 +211,11 @@ class EditPage extends LitElement {
 		await dbUpdateDoc(this.noteId, { blocks: this._blocks });
 	}
 
-	private _addBlock(type: "text" | "list" | "divider") {
+	private _toggleInserter(position: number) {
+		this._openInserter = this._openInserter === position ? null : position;
+	}
+
+	private _insertBlock(position: number, type: "text" | "list" | "divider") {
 		let block: Block;
 		if (type === "list") {
 			block = { type: "list", items: [] };
@@ -205,7 +224,12 @@ class EditPage extends LitElement {
 		} else {
 			block = { type: "text", markdown: "" };
 		}
-		this._blocks = [...this._blocks, block];
+		this._blocks = [
+			...this._blocks.slice(0, position),
+			block,
+			...this._blocks.slice(position),
+		];
+		this._openInserter = null;
 		dbUpdateDoc(this.noteId, { blocks: this._blocks });
 	}
 
@@ -213,6 +237,27 @@ class EditPage extends LitElement {
 		if (!confirm("Delete this block?")) return;
 		this._blocks = this._blocks.filter((_, i) => i !== index);
 		await dbUpdateDoc(this.noteId, { blocks: this._blocks });
+	}
+
+	private _renderInserter(position: number) {
+		const open = this._openInserter === position;
+		return html`
+			<div class="inserter">
+				${
+					open
+						? html`
+						<div class="ins-expanded">
+							<button class="block-btn" @click=${() => this._insertBlock(position, "text")}>Text</button>
+							<button class="block-btn" @click=${() => this._insertBlock(position, "list")}>List</button>
+							<button class="block-btn" @click=${() => this._insertBlock(position, "divider")}>---</button>
+						</div>
+					`
+						: html`
+						<button class="block-btn ins-pill" @click=${() => this._toggleInserter(position)}>+</button>
+					`
+				}
+			</div>
+		`;
 	}
 
 	private _renderBlock(block: Block, i: number) {
@@ -258,12 +303,13 @@ class EditPage extends LitElement {
 						: html`<span class="title-text">${this.title || "Untitled"}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
 				}
       </div>
-      ${this._blocks.map((block, i) => this._renderBlock(block, i))}
-      <div class="add-bar">
-        <button class="block-btn" @click=${() => this._addBlock("text")}>+ Text</button>
-        <button class="block-btn" @click=${() => this._addBlock("list")}>+ List</button>
-        <button class="block-btn" @click=${() => this._addBlock("divider")}>+ ---</button>
-      </div>
+      ${this._blocks.map(
+				(block, i) => html`
+        ${this._renderInserter(i)}
+        ${this._renderBlock(block, i)}
+      `,
+			)}
+      ${this._renderInserter(this._blocks.length)}
       <div class="footer">
         <button class="delete" @click=${this._delete}>delete</button>
       </div>
