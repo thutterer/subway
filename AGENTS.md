@@ -23,9 +23,10 @@
 - `src/assets/` — Silkscreen .woff2 font only
 
 ## Block-based document model
-- `Doc` has `blocks: Block[]`, each block is either `TextBlock` (`{ type: "text", markdown }`) or `ListBlock` (`{ type: "list", items: Task[] }`)
+- `Doc` has `blocks: Block[]`, each block is either `TextBlock` (`{ type: "text", markdown }`), `ListBlock` (`{ type: "list", items: Task[] }`), or `DividerBlock` (`{ type: "divider" }`)
 - Display type is derived from the first block: list → "List", everything else → "Note"
 - **Migration**: Dexie `version(2).upgrade()` maps old `Note` → `Doc` with one block
+- **Block management**: `edit-page.ts` renders an add-block bar (`+ Text`, `+ List`, `+ ---`) and a `[-]` delete button per block (with confirm). All mutations update `this._blocks` immediately and persist via `dbUpdateDoc`.
 
 ## Data flow
 - **Each component owns its writes.** `edit-page.ts` calls `dbUpdateDoc`/`dbDeleteDoc` directly with `await` for title save, delete, and list changes.

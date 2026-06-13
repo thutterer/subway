@@ -3,6 +3,7 @@ import { css, html, LitElement } from "lit";
 import "./back-link.js";
 import "./note-item.js";
 import "./list-item.js";
+import "./divider-item.js";
 import {
 	type Block,
 	db,
@@ -52,6 +53,44 @@ class EditPage extends LitElement {
     }
     .edit-btn:hover {
       color: var(--text-strong);
+    }
+
+    .block-wrapper {
+      position: relative;
+    }
+
+    .block-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.25rem;
+      position: absolute;
+      top: 0.25rem;
+      right: 0.25rem;
+      z-index: 1;
+    }
+
+    .block-btn {
+      background: none;
+      border: 1px solid var(--border-light);
+      cursor: pointer;
+      font-family: "Silkscreen", monospace;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+    .block-btn:hover {
+      color: var(--text-strong);
+      border-color: var(--text-muted);
+    }
+
+    .add-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 0;
+      border-top: 1px solid var(--border-light);
+      margin-top: 0.5rem;
     }
 
     .footer {
@@ -157,6 +196,58 @@ class EditPage extends LitElement {
 		await dbUpdateDoc(this.noteId, { blocks: this._blocks });
 	}
 
+	private _addBlock(type: "text" | "list" | "divider") {
+		let block: Block;
+		if (type === "list") {
+			block = { type: "list", items: [] };
+		} else if (type === "divider") {
+			block = { type: "divider" };
+		} else {
+			block = { type: "text", markdown: "" };
+		}
+		this._blocks = [...this._blocks, block];
+		dbUpdateDoc(this.noteId, { blocks: this._blocks });
+	}
+
+	private async _deleteBlock(index: number) {
+		if (!confirm("Delete this block?")) return;
+		this._blocks = this._blocks.filter((_, i) => i !== index);
+		await dbUpdateDoc(this.noteId, { blocks: this._blocks });
+	}
+
+	private _renderBlock(block: Block, i: number) {
+		let content = html``;
+		if (block.type === "list") {
+			content = html`
+				<list-item
+					.noteId=${this.noteId}
+					.tasks=${block.items}
+					@list-changed=${this._onListChanged}
+				></list-item>
+			`;
+		} else if (block.type === "divider") {
+			content = html`<divider-item></divider-item>`;
+		} else {
+			content = html`
+				<note-item
+					.blockIndex=${i}
+					.text=${block.markdown}
+					@block-changed=${this._onBlockChanged}
+				></note-item>
+			`;
+		}
+		return html`
+			<div class="block-wrapper">
+				${content}
+				<div class="block-actions">
+					<button class="block-btn" @click=${() => this._deleteBlock(i)}>
+						[-]
+					</button>
+				</div>
+			</div>
+		`;
+	}
+
 	render() {
 		return html`
       <div class="header">
@@ -167,23 +258,12 @@ class EditPage extends LitElement {
 						: html`<span class="title-text">${this.title || "Untitled"}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
 				}
       </div>
-      ${this._blocks.map((block, i) =>
-				block.type === "list"
-					? html`
-                <list-item
-                  .noteId=${this.noteId}
-                  .tasks=${block.items}
-                  @list-changed=${this._onListChanged}
-                ></list-item>
-              `
-					: html`
-                <note-item
-                  .blockIndex=${i}
-                  .text=${block.markdown}
-                  @block-changed=${this._onBlockChanged}
-                ></note-item>
-              `,
-			)}
+      ${this._blocks.map((block, i) => this._renderBlock(block, i))}
+      <div class="add-bar">
+        <button class="block-btn" @click=${() => this._addBlock("text")}>+ Text</button>
+        <button class="block-btn" @click=${() => this._addBlock("list")}>+ List</button>
+        <button class="block-btn" @click=${() => this._addBlock("divider")}>+ ---</button>
+      </div>
       <div class="footer">
         <button class="delete" @click=${this._delete}>delete</button>
       </div>

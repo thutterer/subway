@@ -17,7 +17,11 @@ export interface ListBlock {
 	items: Task[];
 }
 
-export type Block = TextBlock | ListBlock;
+export interface DividerBlock {
+	type: "divider";
+}
+
+export type Block = TextBlock | ListBlock | DividerBlock;
 
 export interface Doc {
 	id: string;

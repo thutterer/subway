@@ -12,7 +12,7 @@ class NoteItem extends LitElement {
     .editor-wrapper {
       display: grid;
       border: 1px solid var(--border-light);
-      min-height: 80vh;
+      min-height: 30vh;
     }
     .editor-wrapper > * {
       grid-area: 1 / 1 / 2 / 2;
