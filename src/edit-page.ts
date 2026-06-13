@@ -56,20 +56,6 @@ class EditPage extends LitElement {
       color: var(--text-strong);
     }
 
-    .block-wrapper {
-      position: relative;
-    }
-
-    .block-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.25rem;
-      position: absolute;
-      top: 0.25rem;
-      right: 0.25rem;
-      z-index: 1;
-    }
-
     .block-btn {
       background: none;
       border: 1px solid var(--border-light);
@@ -87,7 +73,8 @@ class EditPage extends LitElement {
 
     .inserter {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
       padding: 0.25rem 0;
     }
 
@@ -96,7 +83,6 @@ class EditPage extends LitElement {
       transition: opacity 0.15s;
       font-size: 0.7rem;
       padding: 1px 8px;
-      border-radius: 0;
     }
     .inserter:hover .ins-pill {
       opacity: 0.8;
@@ -245,18 +231,27 @@ class EditPage extends LitElement {
 		const open = this._openInserter === position;
 		return html`
 			<div class="inserter">
-				${
-					open
-						? html`
+				<div>
+					${
+						open
+							? html`
 						<div class="ins-expanded">
 							<button class="block-btn" @click=${() => this._insertBlock(position, "text")}>Text</button>
 							<button class="block-btn" @click=${() => this._insertBlock(position, "list")}>List</button>
 							<button class="block-btn" @click=${() => this._insertBlock(position, "divider")}>---</button>
 						</div>
 					`
-						: html`
+							: html`
 						<button class="block-btn ins-pill" @click=${() => this._toggleInserter(position)}>+</button>
 					`
+					}
+				</div>
+				${
+					position > 0
+						? html`
+					<button class="block-btn" @click=${() => this._deleteBlock(position - 1)}>-</button>
+				`
+						: html``
 				}
 			</div>
 		`;
@@ -284,16 +279,7 @@ class EditPage extends LitElement {
 				></note-item>
 			`;
 		}
-		return html`
-			<div class="block-wrapper">
-				${content}
-				<div class="block-actions">
-					<button class="block-btn" @click=${() => this._deleteBlock(i)}>
-						[-]
-					</button>
-				</div>
-			</div>
-		`;
+		return content;
 	}
 
 	render() {
