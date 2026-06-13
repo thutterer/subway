@@ -28,6 +28,9 @@ No test, lint, or formatter commands exist.
 - **Empty `src/fonts/`** directory — the Silkscreen font lives in `src/assets/`, loaded via `@font-face` in `src/index.css`.
 - **PWA** is generated at build time only; `vite-plugin-pwa` has no explicit config, so it uses plugin defaults.
 - `dbFetchNoteById` exists but is only used in `edit-page.ts`.
+- **Dexie Cloud addon** is conditionally loaded: only included in `addons` array when `VITE_DB_URL` is set. When absent, `db.cloud` is undefined so `index-page.ts` guards all cloud access with optional chaining. The schema uses `@id` (cloud) vs `id` (core Dexie) depending on URL presence. `dbCreateFoo` provides a `crypto.randomUUID()` ID when running without cloud.
+- **Fire-and-forget writes**: `edit-page.ts`'s `_save()` and `_delete()` dispatch events that trigger async `dbUpdateNote`/`dbDeleteNote` without awaiting them, then immediately navigate. Tests that verify persistence use `page.evaluate` to call the DB operations directly with proper awaiting, bypassing the button flow for write-reliability.
+- **E2E tests**: 9 tests in `e2e/spec.spec.ts` covering home page, navigation, note CRUD, title editing, delete, and list management. Run with `npx playwright test e2e/`.
 
 ## Style conventions
 - CSS custom property `--brand-color: wheat` in `src/index.css:root`; `color-scheme: light dark` with a media query for dark mode (`#16171d` background).

@@ -5,6 +5,19 @@ import { db } from "./db/db.js";
 import { globalStyles } from "./shared-styles.js";
 import "./note-list.js";
 
+const cloud = (db as any).cloud as
+	| {
+			currentUser: {
+				value: { isLoggedIn: boolean };
+				subscribe: (
+					cb: (user: { isLoggedIn: boolean }) => void,
+				) => Subscription;
+			};
+			login: () => void;
+			logout: () => void;
+	  }
+	| undefined;
+
 class IndexPage extends LitElement {
 	static properties = {
 		notes: { type: Array },
@@ -45,11 +58,13 @@ class IndexPage extends LitElement {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.#loggedIn = db.cloud.currentUser.value.isLoggedIn === true;
-		this.#sub = db.cloud.currentUser.subscribe((user) => {
-			this.#loggedIn = user.isLoggedIn === true;
-			this.requestUpdate();
-		});
+		this.#loggedIn = cloud?.currentUser.value.isLoggedIn === true;
+		if (cloud) {
+			this.#sub = cloud.currentUser.subscribe((user) => {
+				this.#loggedIn = user.isLoggedIn === true;
+				this.requestUpdate();
+			});
+		}
 	}
 
 	disconnectedCallback() {
@@ -62,9 +77,15 @@ class IndexPage extends LitElement {
 		return html`
       <header>
         <h1><a href=${base}>Subway Notes</a></h1>
-        <button class="btn" @click=${this.#loggedIn ? db.cloud.logout : db.cloud.login}>
-          ${this.#loggedIn ? "Logout" : "Login"}
-        </button>
+        ${
+					cloud
+						? html`
+          <button class="btn" @click=${this.#loggedIn ? cloud.logout : cloud.login}>
+            ${this.#loggedIn ? "Logout" : "Login"}
+          </button>
+        `
+						: ""
+				}
         <a href="${base}new?type=Note">+ New</a>
       </header>
 

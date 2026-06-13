@@ -20,17 +20,19 @@ type SubwayNotesDB = DexieType & {
 	notes: DexieCloudTable<Note, "id">;
 };
 
+const dbUrl = import.meta.env.VITE_DB_URL;
+
 export const db = new Dexie("SubwayNotes", {
-	addons: [dexieCloud],
+	addons: dbUrl ? [dexieCloud] : [],
 }) as SubwayNotesDB;
 
 db.version(1).stores({
-	notes: "@id, created_at",
+	notes: dbUrl ? "@id, created_at" : "id, created_at",
 });
 
-db.cloud.configure({
-	databaseUrl: "https://zmj6t0epw.dexie.cloud",
-});
+if (dbUrl) {
+	db.cloud.configure({ databaseUrl: dbUrl });
+}
 
 export const dbFetchAll = (): Promise<Note[]> =>
 	db.notes.orderBy("created_at").reverse().toArray();
@@ -41,6 +43,7 @@ export const dbCreateFoo = (
 	title = "",
 ): Promise<string> =>
 	db.notes.add({
+		id: dbUrl ? undefined : crypto.randomUUID(),
 		title,
 		text,
 		type,
