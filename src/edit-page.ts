@@ -88,6 +88,18 @@ class EditPage extends LitElement {
       opacity: 0.8;
     }
 
+    @media (hover: hover) {
+      .ins-pill, .ins-del {
+        opacity: 0;
+      }
+      .inserter:hover .ins-pill {
+        opacity: 0.4;
+      }
+      .inserter:hover .ins-del {
+        opacity: 1;
+      }
+    }
+
     .ins-expanded {
       display: flex;
       gap: 0.5rem;
@@ -249,7 +261,7 @@ class EditPage extends LitElement {
 				${
 					position > 0
 						? html`
-					<button class="block-btn" @click=${() => this._deleteBlock(position - 1)}>-</button>
+					<button class="block-btn ins-del" @click=${() => this._deleteBlock(position - 1)}>-</button>
 				`
 						: html``
 				}
