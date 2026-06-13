@@ -1,4 +1,4 @@
-import{a as e,c as t,l as n}from"./index-CWqXscgY.js";var r=class extends e{static{this.styles=n`
+import{a as e,c as t,l as n}from"./index-BkHQ0ExB.js";var r=class extends e{static{this.styles=n`
     a {
       text-decoration: none;
       color: var(--text-muted);
