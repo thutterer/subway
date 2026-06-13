@@ -30,12 +30,10 @@ class EditPage extends LitElement {
       margin-bottom: 1rem;
     }
     .title-text {
-      font-family: "Silkscreen", monospace;
       font-size: 1.5rem;
     }
     .title-input {
       flex: 1;
-      font-family: "Silkscreen", monospace;
       font-size: 1.5rem;
       padding: 0;
       border: 1px solid var(--brand-color, wheat);
@@ -48,7 +46,6 @@ class EditPage extends LitElement {
       background: none;
       border: none;
       cursor: pointer;
-      font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
       color: var(--text-muted);
     }
@@ -60,7 +57,6 @@ class EditPage extends LitElement {
       background: none;
       border: 1px solid var(--border-light);
       cursor: pointer;
-      font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
       padding: 2px 6px;
       color: var(--text-muted);
@@ -71,10 +67,36 @@ class EditPage extends LitElement {
       border-color: var(--text-muted);
     }
 
+    .block-group {
+      position: relative;
+      transition: background 0.2s;
+      border-radius: 2px;
+      padding: 0.125rem 0;
+    }
+    .block-group:hover {
+      background: rgba(128, 128, 128, 0.06);
+    }
+
+    .block-actions {
+      display: flex;
+      position: absolute;
+      top: 0.25rem;
+      right: 0.25rem;
+      z-index: 1;
+    }
+
+    @media (hover: hover) {
+      .block-actions {
+        opacity: 0;
+      }
+      .block-group:hover .block-actions {
+        opacity: 1;
+      }
+    }
+
     .inserter {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: center;
       padding: 0.25rem 0;
     }
 
@@ -89,14 +111,11 @@ class EditPage extends LitElement {
     }
 
     @media (hover: hover) {
-      .ins-pill, .ins-del {
+      .ins-pill {
         opacity: 0;
       }
       .inserter:hover .ins-pill {
         opacity: 0.4;
-      }
-      .inserter:hover .ins-del {
-        opacity: 1;
       }
     }
 
@@ -114,7 +133,6 @@ class EditPage extends LitElement {
         background: none;
         border: none;
         cursor: pointer;
-        font-family: "Silkscreen", monospace;
         font-size: 0.75rem;
         color: var(--text-muted);
 
@@ -155,6 +173,7 @@ class EditPage extends LitElement {
 
 	willUpdate(changedProperties: Map<string, unknown>) {
 		if (changedProperties.has("noteId")) {
+			this._editing = false;
 			this._subscribe(this.noteId);
 		}
 	}
@@ -193,12 +212,14 @@ class EditPage extends LitElement {
 		}
 	}
 
-	private _onBlockChanged(e: Event) {
-		const { blockIndex, markdown } = (e as CustomEvent).detail;
+	private async _onBlockChanged(e: Event) {
+		const { blockIndex, markdown } = (
+			e as CustomEvent<{ blockIndex: number; markdown: string }>
+		).detail;
 		const blocks = this._blocks.map((b, i) =>
 			i === blockIndex ? { ...b, markdown } : b,
 		);
-		dbUpdateDoc(this.noteId, { blocks });
+		await dbUpdateDoc(this.noteId, { blocks });
 	}
 
 	private async _onListChanged(e: Event) {
@@ -243,27 +264,18 @@ class EditPage extends LitElement {
 		const open = this._openInserter === position;
 		return html`
 			<div class="inserter">
-				<div>
-					${
-						open
-							? html`
+				${
+					open
+						? html`
 						<div class="ins-expanded">
 							<button class="block-btn" @click=${() => this._insertBlock(position, "text")}>Text</button>
 							<button class="block-btn" @click=${() => this._insertBlock(position, "list")}>List</button>
 							<button class="block-btn" @click=${() => this._insertBlock(position, "divider")}>---</button>
 						</div>
 					`
-							: html`
+						: html`
 						<button class="block-btn ins-pill" @click=${() => this._toggleInserter(position)}>+</button>
 					`
-					}
-				</div>
-				${
-					position > 0
-						? html`
-					<button class="block-btn ins-del" @click=${() => this._deleteBlock(position - 1)}>-</button>
-				`
-						: html``
 				}
 			</div>
 		`;
@@ -291,7 +303,14 @@ class EditPage extends LitElement {
 				></note-item>
 			`;
 		}
-		return content;
+		return html`
+			${content}
+			<div class="block-actions">
+				<button class="block-btn" @click=${() => this._deleteBlock(i)}>
+					-
+				</button>
+			</div>
+		`;
 	}
 
 	render() {
@@ -304,13 +323,15 @@ class EditPage extends LitElement {
 						: html`<span class="title-text">${this.title || "Untitled"}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
 				}
       </div>
+      ${this._renderInserter(0)}
       ${this._blocks.map(
 				(block, i) => html`
-        ${this._renderInserter(i)}
-        ${this._renderBlock(block, i)}
+        <div class="block-group">
+          ${this._renderBlock(block, i)}
+        </div>
+        ${this._renderInserter(i + 1)}
       `,
 			)}
-      ${this._renderInserter(this._blocks.length)}
       <div class="footer">
         <button class="delete" @click=${this._delete}>delete</button>
       </div>

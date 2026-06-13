@@ -1,5 +1,5 @@
-import Dexie, { type Dexie as DexieType } from "dexie";
-import dexieCloud, { type DexieCloudTable } from "dexie-cloud-addon";
+import Dexie from "dexie";
+import dexieCloud from "dexie-cloud-addon";
 
 export interface Task {
 	id: string;
@@ -39,8 +39,8 @@ interface OldNote {
 	created_at: number;
 }
 
-type SubwayNotesDB = DexieType & {
-	docs: DexieCloudTable<Doc, "id">;
+type SubwayNotesDB = Dexie & {
+	docs: Dexie.Table<Doc, string>;
 };
 
 const dbUrl = import.meta.env.VITE_DB_URL;
@@ -84,13 +84,13 @@ if (dbUrl) {
 export const dbFetchAllDocs = (): Promise<Doc[]> =>
 	db.docs.orderBy("created_at").reverse().toArray();
 
-export const dbCreateDoc = (blockType: string): Promise<string> => {
+export const dbCreateDoc = (blockType: Block["type"]): Promise<string> => {
 	const block: Block =
-		blockType === "List"
+		blockType === "list"
 			? { type: "list", items: [] }
 			: { type: "text", markdown: "" };
 	return db.docs.add({
-		id: dbUrl ? undefined : crypto.randomUUID(),
+		id: crypto.randomUUID(),
 		title: "",
 		blocks: [block],
 		created_at: Date.now(),

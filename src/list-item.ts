@@ -50,7 +50,6 @@ class ListItem extends LitElement {
 
     .text {
       flex: 1;
-      font-family: "Silkscreen", monospace;
       font-size: 1rem;
     }
     .text.done {
@@ -63,7 +62,6 @@ class ListItem extends LitElement {
       background: none;
       border: none;
       cursor: pointer;
-      font-family: "Silkscreen", monospace;
       font-size: 1rem;
       padding: 0.25rem;
       color: var(--text-muted);
@@ -80,7 +78,6 @@ class ListItem extends LitElement {
 
     .add-row input {
       flex: 1;
-      font-family: "Silkscreen", monospace;
       font-size: 1rem;
       padding: 0.25rem;
       border: 1px solid var(--border-light);

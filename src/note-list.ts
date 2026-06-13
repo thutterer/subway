@@ -42,12 +42,10 @@ class NoteList extends LitElement {
 
     .text {
       flex: 1 1 100%;
-      font-family: "Silkscreen", monospace;
       font-size: 1rem;
     }
 
     .date, .type {
-      font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
       color: var(--text-muted);
     }

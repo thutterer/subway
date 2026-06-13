@@ -1,12 +1,13 @@
 :root {
   --bg: #ffffff;
   --brand-color: wheat;
+  --text-on-brand: #000;
   --border: #333;
   --border-light: #ccc;
   --text-muted: #999;
   --text-subtle: #666;
   --text-strong: #000;
-  --surface: color-mix(in srgb, var(--bg), white 0%);
+  --surface: var(--bg);
   --shadow: color-mix(in srgb, var(--bg), black 25%);
   color-scheme: light dark;
   background-color: var(--bg);

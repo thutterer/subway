@@ -47,7 +47,6 @@ class TileSelect extends LitElement {
       color: var(--text-strong);
       border: 2px solid var(--border);
       cursor: pointer;
-      font-family: "Silkscreen", monospace;
       font-size: 16px;
       box-shadow: 3px 3px 0 0 var(--shadow);
       transition: filter 0.1s;
@@ -63,12 +62,6 @@ class TileSelect extends LitElement {
       border-color: var(--brand-color);
       color: var(--text-on-brand);
       box-shadow: 3px 3px 0 0 var(--shadow);
-    }
-    .tile.selected:hover {
-      filter: brightness(1.08);
-    }
-    .tile.selected:active {
-      filter: brightness(0.95);
     }
     .tile:disabled {
       opacity: 0.4;
