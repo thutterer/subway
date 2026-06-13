@@ -1,11 +1,10 @@
 import { css, html, LitElement } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { dbUpdateNote } from "./db/db.js";
 import { highlightMarkdown } from "./markdown-highlight.js";
 
 class NoteItem extends LitElement {
 	static properties = {
-		noteId: {},
+		blockIndex: {},
 		text: { type: String },
 	};
 
@@ -77,12 +76,18 @@ class NoteItem extends LitElement {
     }
   `;
 
-	noteId!: string;
+	blockIndex!: number;
 	text!: string;
 
 	private _onInput(e: Event) {
-		const text = (e.target as HTMLTextAreaElement).value;
-		dbUpdateNote(this.noteId, text);
+		const markdown = (e.target as HTMLTextAreaElement).value;
+		this.dispatchEvent(
+			new CustomEvent("block-changed", {
+				bubbles: true,
+				composed: true,
+				detail: { blockIndex: this.blockIndex, markdown },
+			}),
+		);
 	}
 
 	render() {

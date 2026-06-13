@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 import type { Subscription } from "rxjs";
-import type { Note } from "./db/db.js";
+import type { Doc } from "./db/db.js";
 import { db } from "./db/db.js";
 import "./note-list.js";
 
@@ -53,7 +53,7 @@ class IndexPage extends LitElement {
     }
   `;
 
-	notes: Note[] = [];
+	notes: Doc[] = [];
 	#loggedIn = false;
 	#sub?: Subscription;
 

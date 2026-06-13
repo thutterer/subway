@@ -1,15 +1,15 @@
 import { Router } from "@lit-labs/router";
 import { liveQuery } from "dexie";
 import { html, LitElement } from "lit";
-import type { Note } from "./db/db.js";
-import { dbFetchAll } from "./db/db.js";
+import type { Doc } from "./db/db.js";
+import { dbFetchAllDocs } from "./db/db.js";
 
 class AppRoot extends LitElement {
 	static properties = {
 		notes: { type: Array },
 	};
 
-	notes: Note[] = [];
+	notes: Doc[] = [];
 
 	#base = import.meta.env.BASE_URL;
 
@@ -48,7 +48,7 @@ class AppRoot extends LitElement {
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.#subscription = liveQuery(() => dbFetchAll()).subscribe({
+		this.#subscription = liveQuery(() => dbFetchAllDocs()).subscribe({
 			next: (data) => {
 				this.notes = data;
 			},

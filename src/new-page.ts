@@ -1,7 +1,7 @@
 import { css, html, LitElement } from "lit";
 import "./back-link.js";
 import "./tile-select.js";
-import { dbCreateNote } from "./db/db.js";
+import { dbCreateDoc } from "./db/db.js";
 import type { TileOption } from "./tile-select.js";
 
 const NOTE_SVG = html`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M16 4h-2v6h6V8h2v14H2V2h14v2ZM4 20h16v-8h-8V4H4v16Zm8-2H6v-2h6v2Zm-2-4H6v-2h4v2Zm10-6h-2V6h2v2Zm-2-2h-2V4h2v2Z"/></svg>`;
@@ -25,7 +25,7 @@ class NewPage extends LitElement {
 
 	private async _onTypeChange(e: Event) {
 		const type = (e as CustomEvent<{ value: string }>).detail.value;
-		const id = await dbCreateNote("", type);
+		const id = await dbCreateDoc(type);
 		this.dispatchEvent(
 			new CustomEvent("navigate", {
 				bubbles: true,

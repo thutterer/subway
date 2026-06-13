@@ -11,7 +11,7 @@
 
 ## Stack
 - **Lit 3** with `@lit-labs/router` — LitElement web components, no JSX, Shadow DOM
-- **Dexie** — IndexedDB wrapper, single `SubwayNotes` DB: `notes: ++id, text, title?, type?, tasks?, created_at`
+- **Dexie** — IndexedDB wrapper, single `SubwayNotes` DB: `docs` table (`id, created_at`) with version 2 migration from old `notes` table
 - **Vite** — bundler/dev server
 - **vite-plugin-pwa** — generates service worker + manifest at build time (zero config)
 - **TypeScript** — checked via `tsc --noEmit`; Vite/esbuild handles transpilation
@@ -19,18 +19,23 @@
 ## Project structure
 - `index.html` → `src/app-root.ts` — entrypoint, custom element `<app-root>`
 - `src/` — all components, flat layout
-- `src/db/db.ts` — Dexie CRUD: `dbFetchAll`, `dbCreateNote`, `dbUpdateNote`, `dbDeleteNote`
+- `src/db/db.ts` — Dexie CRUD: `dbFetchAllDocs`, `dbCreateDoc`, `dbUpdateDoc`, `dbDeleteDoc`
 - `src/assets/` — Silkscreen .woff2 font only
 
+## Block-based document model
+- `Doc` has `blocks: Block[]`, each block is either `TextBlock` (`{ type: "text", markdown }`) or `ListBlock` (`{ type: "list", items: Task[] }`)
+- Display type is derived from the first block: list → "List", everything else → "Note"
+- **Migration**: Dexie `version(2).upgrade()` maps old `Note` → `Doc` with one block
+
 ## Data flow
-- **Each component owns its writes.** `note-item.ts` calls `dbUpdateNote` directly on input. `edit-page.ts` calls `dbUpdateNote`/`dbDeleteNote` directly with `await` for title save, delete, and list changes.
-- **`note-item._onInput`** is fire-and-forget (real-time keystroke — intentional).
-- **`list-item` → `list-changed` → `edit-page._onListChanged`** — local 1-hop event so `edit-page` updates `this._tasks` immediately (avoiding stale data from `liveQuery` latency). `_onListChanged` awaits the write internally.
-- **`app-root.ts`** only runs a `liveQuery` subscription for the home-page note list and a `@navigate` handler for SPA routing. It no longer handles CRUD events.
+- **Each component owns its writes.** `edit-page.ts` calls `dbUpdateDoc`/`dbDeleteDoc` directly with `await` for title save, delete, and list changes.
+- **`note-item` → `block-changed` → `edit-page._onBlockChanged`** — note-item dispatches keystroke events (fire-and-forget); edit-page updates blocks in DB.
+- **`list-item` → `list-changed` → `edit-page._onListChanged`** — local 1-hop event so `edit-page` updates `this._blocks` immediately (avoiding stale data from `liveQuery` latency). `_onListChanged` awaits the write internally.
+- **`app-root.ts`** only runs a `liveQuery` subscription for the home-page doc list and a `@navigate` handler for SPA routing. It no longer handles CRUD events.
 - **Navigation** is unified via `navigate` custom events (bubbles, composed) with `detail: { path }`. The `@navigate` listener on `<main>` uses `history.pushState` + `router.goto`.
 
 ## Dexie Cloud addon
-Conditionally loaded in `db.ts` when `VITE_DB_URL` is set. Without it, `db.cloud` is `undefined` and `index-page.ts` guards all cloud access with optional chaining. Schema uses `@id` (cloud) vs `id` (core Dexie). `dbCreateNote` provides `crypto.randomUUID()` when running without cloud.
+Conditionally loaded in `db.ts` when `VITE_DB_URL` is set. Without it, `db.cloud` is `undefined` and `index-page.ts` guards all cloud access with optional chaining. Schema uses `@id` (cloud) vs `id` (core Dexie). `dbCreateDoc` provides `crypto.randomUUID()` when running without cloud.
 
 ## Test patterns
 - **14 e2e tests** in `e2e/spec.spec.ts` covering Index, Notes (CRUD, title edit, UI delete), Lists (CRUD, toggle, task delete, progress bar), and Navigation (back-link).

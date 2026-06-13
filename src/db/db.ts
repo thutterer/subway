@@ -7,7 +7,26 @@ export interface Task {
 	done: boolean;
 }
 
-export interface Note {
+export interface TextBlock {
+	type: "text";
+	markdown: string;
+}
+
+export interface ListBlock {
+	type: "list";
+	items: Task[];
+}
+
+export type Block = TextBlock | ListBlock;
+
+export interface Doc {
+	id: string;
+	title?: string;
+	blocks: Block[];
+	created_at: number;
+}
+
+interface OldNote {
 	id: string;
 	text: string;
 	title?: string;
@@ -17,7 +36,7 @@ export interface Note {
 }
 
 type SubwayNotesDB = DexieType & {
-	notes: DexieCloudTable<Note, "id">;
+	docs: DexieCloudTable<Doc, "id">;
 };
 
 const dbUrl = import.meta.env.VITE_DB_URL;
@@ -30,37 +49,53 @@ db.version(1).stores({
 	notes: dbUrl ? "@id, created_at" : "id, created_at",
 });
 
+db.version(2)
+	.stores({
+		docs: dbUrl ? "@id, created_at" : "id, created_at",
+	})
+	.upgrade(async (tx) => {
+		try {
+			const notes = await tx.table<OldNote>("notes").toArray();
+			for (const note of notes) {
+				const block: Block =
+					note.type === "List"
+						? { type: "list", items: note.tasks ?? [] }
+						: { type: "text", markdown: note.text ?? "" };
+				await tx.table("docs").add({
+					id: note.id,
+					title: note.title,
+					blocks: [block],
+					created_at: note.created_at,
+				});
+			}
+		} catch {
+			// notes table may not exist on fresh install
+		}
+	});
+
 if (dbUrl) {
 	db.cloud.configure({ databaseUrl: dbUrl });
 }
 
-export const dbFetchAll = (): Promise<Note[]> =>
-	db.notes.orderBy("created_at").reverse().toArray();
+export const dbFetchAllDocs = (): Promise<Doc[]> =>
+	db.docs.orderBy("created_at").reverse().toArray();
 
-export const dbCreateNote = (
-	text: string,
-	type: string,
-	title = "",
-): Promise<string> =>
-	db.notes.add({
+export const dbCreateDoc = (blockType: string): Promise<string> => {
+	const block: Block =
+		blockType === "List"
+			? { type: "list", items: [] }
+			: { type: "text", markdown: "" };
+	return db.docs.add({
 		id: dbUrl ? undefined : crypto.randomUUID(),
-		title,
-		text,
-		type,
-		tasks: [],
+		title: "",
+		blocks: [block],
 		created_at: Date.now(),
 	});
-
-export const dbUpdateNote = (
-	id: string,
-	text: string,
-	tasks?: Task[],
-	title?: string,
-): Promise<number> => {
-	const update: Partial<Note> = { text };
-	if (tasks !== undefined) update.tasks = tasks;
-	if (title !== undefined) update.title = title;
-	return db.notes.update(id, update);
 };
 
-export const dbDeleteNote = (id: string): Promise<void> => db.notes.delete(id);
+export const dbUpdateDoc = (
+	id: string,
+	updates: { blocks?: Block[]; title?: string },
+): Promise<number> => db.docs.update(id, updates);
+
+export const dbDeleteDoc = (id: string): Promise<void> => db.docs.delete(id);

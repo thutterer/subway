@@ -1,5 +1,5 @@
 import { css, html, LitElement } from "lit";
-import type { Note } from "./db/db.js";
+import type { Doc } from "./db/db.js";
 
 const base = import.meta.env.BASE_URL;
 
@@ -8,6 +8,9 @@ const formatTimestamp = (ts: number) =>
 		dateStyle: "short",
 		timeStyle: "short",
 	});
+
+const displayType = (doc: Doc) =>
+	doc.blocks[0]?.type === "list" ? "List" : "Note";
 
 class NoteList extends LitElement {
 	static properties = {
@@ -57,7 +60,7 @@ class NoteList extends LitElement {
     }
   `;
 
-	notes: Note[] = [];
+	notes: Doc[] = [];
 
 	render() {
 		if (this.notes.length === 0) {
@@ -83,7 +86,7 @@ class NoteList extends LitElement {
 					}}>
             <span class="text">${note.title || "Untitled"}</span>
             <span class="date">${formatTimestamp(note.created_at)}</span>
-            <span class="type">${note.type || "Note"}</span>
+            <span class="type">${displayType(note)}</span>
           </a>
         `,
 				)}

@@ -3,14 +3,19 @@ import { css, html, LitElement } from "lit";
 import "./back-link.js";
 import "./note-item.js";
 import "./list-item.js";
-import { db, dbDeleteNote, dbUpdateNote, type Task } from "./db/db.js";
+import {
+	type Block,
+	db,
+	dbDeleteDoc,
+	dbUpdateDoc,
+	type Task,
+} from "./db/db.js";
 
 class EditPage extends LitElement {
 	static properties = {
 		noteId: {},
 		title: { type: String },
-		text: { type: String },
-		type: { type: String },
+		_blocks: { state: true },
 		_editing: { state: true },
 	};
 
@@ -71,9 +76,7 @@ class EditPage extends LitElement {
 
 	noteId = "";
 	title = "";
-	type = "";
-	text = "";
-	private _tasks: Task[] = [];
+	private _blocks: Block[] = [];
 	private _editing = false;
 	private _sub?: { unsubscribe: () => void };
 
@@ -89,13 +92,11 @@ class EditPage extends LitElement {
 
 	private _subscribe(id: string) {
 		this._sub?.unsubscribe();
-		this._sub = liveQuery(() => db.notes.get(id)).subscribe({
-			next: (note) => {
-				if (!note) return;
-				this.title = note.title ?? "";
-				this.text = note.text;
-				this.type = note.type ?? "";
-				this._tasks = note.tasks ?? [];
+		this._sub = liveQuery(() => db.docs.get(id)).subscribe({
+			next: (doc) => {
+				if (!doc) return;
+				this.title = doc.title ?? "";
+				this._blocks = doc.blocks;
 			},
 		});
 	}
@@ -108,7 +109,7 @@ class EditPage extends LitElement {
 
 	private async _delete() {
 		if (!confirm("Delete this note?")) return;
-		await dbDeleteNote(this.noteId);
+		await dbDeleteDoc(this.noteId);
 		this.dispatchEvent(
 			new CustomEvent("navigate", {
 				bubbles: true,
@@ -131,7 +132,7 @@ class EditPage extends LitElement {
 		const input = e.target as HTMLInputElement;
 		this.title = input.value;
 		this._editing = false;
-		await dbUpdateNote(this.noteId, this.text, this._tasks, this.title);
+		await dbUpdateDoc(this.noteId, { title: this.title });
 	}
 
 	private _onKeyDown(e: KeyboardEvent) {
@@ -140,10 +141,20 @@ class EditPage extends LitElement {
 		}
 	}
 
+	private _onBlockChanged(e: Event) {
+		const { blockIndex, markdown } = (e as CustomEvent).detail;
+		const blocks = this._blocks.map((b, i) =>
+			i === blockIndex ? { ...b, markdown } : b,
+		);
+		dbUpdateDoc(this.noteId, { blocks });
+	}
+
 	private async _onListChanged(e: Event) {
 		const { tasks } = (e as CustomEvent<{ tasks: Task[] }>).detail;
-		this._tasks = tasks;
-		await dbUpdateNote(this.noteId, this.text, tasks, this.title);
+		this._blocks = this._blocks.map((b) =>
+			b.type === "list" ? { ...b, items: tasks } : b,
+		);
+		await dbUpdateDoc(this.noteId, { blocks: this._blocks });
 	}
 
 	render() {
@@ -156,22 +167,23 @@ class EditPage extends LitElement {
 						: html`<span class="title-text">${this.title || "Untitled"}</span><button class="edit-btn" @click=${this._startEdit}>edit</button>`
 				}
       </div>
-      ${
-				this.type === "List"
+      ${this._blocks.map((block, i) =>
+				block.type === "list"
 					? html`
-            <list-item
-              .noteId=${this.noteId}
-              .tasks=${this._tasks}
-              @list-changed=${this._onListChanged}
-            ></list-item>
-          `
+                <list-item
+                  .noteId=${this.noteId}
+                  .tasks=${block.items}
+                  @list-changed=${this._onListChanged}
+                ></list-item>
+              `
 					: html`
-            <note-item
-              .noteId=${this.noteId}
-              .text=${this.text}
-            ></note-item>
-          `
-			}
+                <note-item
+                  .blockIndex=${i}
+                  .text=${block.markdown}
+                  @block-changed=${this._onBlockChanged}
+                ></note-item>
+              `,
+			)}
       <div class="footer">
         <button class="delete" @click=${this._delete}>delete</button>
       </div>
