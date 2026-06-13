@@ -1,4 +1,4 @@
-import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./index-BkHQ0ExB.js";import"./back-link-B-L5DXZP.js";var l={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},u=e=>(...t)=>({_$litDirective$:e,values:t}),d=class{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,n){this._$Ct=e,this._$AM=t,this._$Ci=n}_$AS(e,t){return this.update(e,t)}update(e,t){return this.render(...t)}},f=class extends d{constructor(e){if(super(e),this.it=i,e.type!==l.CHILD)throw Error(this.constructor.directiveName+`() can only be used in child bindings`)}render(e){if(e===i||e==null)return this._t=void 0,this.it=e;if(e===o)return e;if(typeof e!=`string`)throw Error(this.constructor.directiveName+`() called with a non-string value`);if(e===this.it)return this._t;this.it=e;let t=[e];return t.raw=t,this._t={_$litType$:this.constructor.resultType,strings:t,values:[]}}};f.directiveName=`unsafeHTML`,f.resultType=1;var p=u(f);function m(e){let t=e.replace(/&/g,`&amp;`).replace(/</g,`&lt;`).replace(/>/g,`&gt;`).split(`
+import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./index-Bxa4ysPg.js";import"./back-link-C6Zx5iDs.js";var l={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},u=e=>(...t)=>({_$litDirective$:e,values:t}),d=class{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,n){this._$Ct=e,this._$AM=t,this._$Ci=n}_$AS(e,t){return this.update(e,t)}update(e,t){return this.render(...t)}},f=class extends d{constructor(e){if(super(e),this.it=i,e.type!==l.CHILD)throw Error(this.constructor.directiveName+`() can only be used in child bindings`)}render(e){if(e===i||e==null)return this._t=void 0,this.it=e;if(e===o)return e;if(typeof e!=`string`)throw Error(this.constructor.directiveName+`() called with a non-string value`);if(e===this.it)return this._t;this.it=e;let t=[e];return t.raw=t,this._t={_$litType$:this.constructor.resultType,strings:t,values:[]}}};f.directiveName=`unsafeHTML`,f.resultType=1;var p=u(f);function m(e){let t=e.replace(/&/g,`&amp;`).replace(/</g,`&lt;`).replace(/>/g,`&gt;`).split(`
 `),n=[],r=!1;for(let e of t){if(/^```/.test(e)){r=!r,n.push(`<span class="md-fence">${e}</span>`);continue}if(r){n.push(`<span class="md-fence">${e}</span>`);continue}if(/^#{1,6}\s/.test(e)){let t=e.match(/^(#+)/)[1].length;n.push(`<span class="md-h${t}">${e}</span>`);continue}if(/^\s*>/.test(e)){n.push(`<span class="md-blockquote">${e}</span>`);continue}if(/^(?:---|\*\*\*|___)\s*$/.test(e)){n.push(`<span class="md-hr">${e}</span>`);continue}if(/^\s*[-*+]\s/.test(e)){n.push(`<span class="md-list">${e}</span>`);continue}if(/^\s*\d+\.\s/.test(e)){n.push(`<span class="md-list">${e}</span>`);continue}n.push(h(e))}return n.join(`
 `)}function h(e){return e.replace(/`([^`\n]+)`/g,'<span class="md-code">`$1`</span>').replace(/\*\*(.*?)\*\*/g,`<span class="md-bold">**$1**</span>`).replace(/__(.*?)__/g,`<span class="md-bold">__$1__</span>`).replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g,`<span class="md-italic">*$1*</span>`).replace(/(?<!_)_([^_\n]+)_(?!_)/g,`<span class="md-italic">_$1_</span>`).replace(/~~(.*?)~~/g,`<span class="md-strike">~~$1~~</span>`).replace(/\[([^\]]+)\]\(([^)]+)\)/g,`<span class="md-link">[$1]($2)</span>`).replace(/!\[([^\]]*)\]\(([^)]+)\)/g,`<span class="md-image">![$1]($2)</span>`)}var g=class extends e{static{this.properties={blockIndex:{},text:{type:String}}}static{this.styles=r`
     .editor-wrapper {
@@ -112,6 +112,7 @@ import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./ind
     }
 
     .text {
+      font-family: "Silkscreen", monospace;
       flex: 1;
       font-size: 1rem;
     }
@@ -121,6 +122,7 @@ import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./ind
     }
 
     .delete {
+      font-family: "Silkscreen", monospace;
       flex-shrink: 0;
       background: none;
       border: none;
@@ -140,6 +142,7 @@ import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./ind
     }
 
     .add-row input {
+      font-family: "Silkscreen", monospace;
       flex: 1;
       font-size: 1rem;
       padding: 0.25rem;
@@ -190,9 +193,11 @@ import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./ind
       margin-bottom: 1rem;
     }
     .title-text {
+      font-family: "Silkscreen", monospace;
       font-size: 1.5rem;
     }
     .title-input {
+      font-family: "Silkscreen", monospace;
       flex: 1;
       font-size: 1.5rem;
       padding: 0;
@@ -203,6 +208,7 @@ import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./ind
       outline: none;
     }
     .edit-btn {
+      font-family: "Silkscreen", monospace;
       background: none;
       border: none;
       cursor: pointer;
@@ -214,6 +220,7 @@ import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./ind
     }
 
     .block-btn {
+      font-family: "Silkscreen", monospace;
       background: none;
       border: 1px solid var(--border-light);
       cursor: pointer;
@@ -289,6 +296,7 @@ import{a as e,c as t,i as n,l as r,o as i,r as a,s as o,t as s,u as c}from"./ind
       justify-content: center;
 
       .delete {
+        font-family: "Silkscreen", monospace;
         margin-top: 1rem;
         background: none;
         border: none;

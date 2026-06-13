@@ -1,4 +1,4 @@
-import{a as e,c as t,l as n,n as r}from"./index-BkHQ0ExB.js";import"./back-link-B-L5DXZP.js";var i=class extends e{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`tile-select`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=n`
+import{a as e,c as t,l as n,n as r}from"./index-Bxa4ysPg.js";import"./back-link-C6Zx5iDs.js";var i=class extends e{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`tile-select`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=n`
     :host {
       display: block;
     }
@@ -7,6 +7,7 @@ import{a as e,c as t,l as n,n as r}from"./index-BkHQ0ExB.js";import"./back-link-
       gap: 1rem;
     }
     .tile {
+      font-family: "Silkscreen", monospace;
       flex-grow: 1;
       display: flex;
       flex-direction: column;

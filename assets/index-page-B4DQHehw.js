@@ -1,4 +1,4 @@
-import{a as e,c as t,l as n,t as r}from"./index-BkHQ0ExB.js";var i=`/subway/`,a=e=>new Date(e).toLocaleString(void 0,{dateStyle:`short`,timeStyle:`short`}),o=e=>e.blocks[0]?.type===`list`?`List`:`Note`,s=class extends e{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=n`
+import{a as e,c as t,l as n,t as r}from"./index-Bxa4ysPg.js";var i=`/subway/`,a=e=>new Date(e).toLocaleString(void 0,{dateStyle:`short`,timeStyle:`short`}),o=e=>e.blocks[0]?.type===`list`?`List`:`Note`,s=class extends e{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=n`
     .list {
       display: flex;
       flex-direction: column;
@@ -22,11 +22,13 @@ import{a as e,c as t,l as n,t as r}from"./index-BkHQ0ExB.js";var i=`/subway/`,a=
     }
 
     .text {
+      font-family: "Silkscreen", monospace;
       flex: 1 1 100%;
       font-size: 1rem;
     }
 
     .date, .type {
+      font-family: "Silkscreen", monospace;
       font-size: 0.75rem;
       color: var(--text-muted);
     }
