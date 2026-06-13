@@ -204,9 +204,11 @@ class EditPage extends LitElement {
 	}
 
 	private async _onListChanged(e: Event) {
-		const { tasks } = (e as CustomEvent<{ tasks: Task[] }>).detail;
-		this._blocks = this._blocks.map((b) =>
-			b.type === "list" ? { ...b, items: tasks } : b,
+		const { blockIndex, tasks } = (
+			e as CustomEvent<{ blockIndex: number; tasks: Task[] }>
+		).detail;
+		this._blocks = this._blocks.map((b, i) =>
+			i === blockIndex ? { ...b, items: tasks } : b,
 		);
 		await dbUpdateDoc(this.noteId, { blocks: this._blocks });
 	}
@@ -266,6 +268,7 @@ class EditPage extends LitElement {
 			content = html`
 				<list-item
 					.noteId=${this.noteId}
+					.blockIndex=${i}
 					.tasks=${block.items}
 					@list-changed=${this._onListChanged}
 				></list-item>

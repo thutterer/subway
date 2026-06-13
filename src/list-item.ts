@@ -4,10 +4,12 @@ import type { Task } from "./db/db.js";
 class ListItem extends LitElement {
 	static properties = {
 		noteId: {},
+		blockIndex: {},
 		tasks: { type: Array },
 	};
 
 	noteId!: string;
+	blockIndex!: number;
 	tasks: Task[] = [];
 
 	static styles = css`
@@ -151,7 +153,11 @@ class ListItem extends LitElement {
 	private _dispatch() {
 		this.dispatchEvent(
 			new CustomEvent("list-changed", {
-				detail: { id: this.noteId, tasks: this.tasks },
+				detail: {
+					id: this.noteId,
+					blockIndex: this.blockIndex,
+					tasks: this.tasks,
+				},
 				bubbles: true,
 				composed: true,
 			}),
