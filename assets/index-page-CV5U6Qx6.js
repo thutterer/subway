@@ -1,10 +1,4 @@
-import{a as e,i as t,r as n,t as r}from"./index-R2Q_2ygq.js";var i=e`
-  a {
-    text-decoration: none;
-    color: var(--brand-color);
-    transition: color 0.15s ease-in-out;
-  }
-`,a=e=>new Date(e).toLocaleString(void 0,{dateStyle:`short`,timeStyle:`short`}),o=class extends n{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=e`
+import{a as e,c as t,l as n,t as r}from"./index-CWqXscgY.js";var i=`/subway/`,a=e=>new Date(e).toLocaleString(void 0,{dateStyle:`short`,timeStyle:`short`}),o=class extends e{constructor(...e){super(...e),this.notes=[]}static{this.properties={notes:{type:Array}}}static{this.styles=n`
     .list {
       display: flex;
       flex-direction: column;
@@ -48,14 +42,17 @@ import{a as e,i as t,r as n,t as r}from"./index-R2Q_2ygq.js";var i=e`
   `}render(){return this.notes.length===0?t`<p class="empty">No notes yet.</p>`:t`
       <div class="list" role="list">
         ${this.notes.map(e=>t`
-          <a class="row" role="listitem" href="${`/subway/`}note/${e.id}">
+          <a class="row" role="listitem" href="${i}note/${e.id}" @click=${t=>{t.preventDefault();let n=`note/`+e.id;this.dispatchEvent(new CustomEvent(`navigate`,{bubbles:!0,composed:!0,detail:{path:n}}))}}>
             <span class="text">${e.title||`Untitled`}</span>
             <span class="date">${a(e.created_at)}</span>
             <span class="type">${e.type||`Note`}</span>
           </a>
         `)}
       </div>
-    `}};customElements.define(`note-list`,o);var s=class extends n{constructor(...e){super(...e),this.notes=[],this.#e=!1}static{this.properties={notes:{type:Array}}}static{this.styles=[i,e`
+    `}};customElements.define(`note-list`,o);var s=`/subway/`,c=r.cloud,l=class extends e{constructor(...e){super(...e),this.notes=[],this.#e=!1}static{this.properties={notes:{type:Array}}}static{this.styles=n`
+    a {
+      color: var(--brand-color);
+    }
     header {
       display: flex;
       gap: 1rem;
@@ -79,14 +76,16 @@ import{a as e,i as t,r as n,t as r}from"./index-R2Q_2ygq.js";var i=e`
     header > a:hover, header .btn:hover {
       filter: brightness(0.9);
     }
-  `]}#e;#t;connectedCallback(){super.connectedCallback(),this.#e=r.cloud.currentUser.value.isLoggedIn===!0,this.#t=r.cloud.currentUser.subscribe(e=>{this.#e=e.isLoggedIn===!0,this.requestUpdate()})}disconnectedCallback(){super.disconnectedCallback(),this.#t?.unsubscribe()}render(){let e=`/subway/`;return t`
+  `}#e;#t;connectedCallback(){super.connectedCallback(),this.#e=c?.currentUser.value.isLoggedIn===!0,c&&(this.#t=c.currentUser.subscribe(e=>{this.#e=e.isLoggedIn===!0,this.requestUpdate()}))}disconnectedCallback(){super.disconnectedCallback(),this.#t?.unsubscribe()}#n(e){e.preventDefault(),this.dispatchEvent(new CustomEvent(`navigate`,{bubbles:!0,composed:!0,detail:{path:``}}))}#r(e){e.preventDefault(),this.dispatchEvent(new CustomEvent(`navigate`,{bubbles:!0,composed:!0,detail:{path:`new`}}))}render(){return t`
       <header>
-        <h1><a href=${e}>Subway Notes</a></h1>
-        <button class="btn" @click=${this.#e?r.cloud.logout:r.cloud.login}>
-          ${this.#e?`Logout`:`Login`}
-        </button>
-        <a href="${e}new?type=Note">+ New</a>
+        <h1><a href=${s} @click=${this.#n}>Subway Notes</a></h1>
+        ${c?t`
+          <button class="btn" @click=${this.#e?c.logout:c.login}>
+            ${this.#e?`Logout`:`Login`}
+          </button>
+        `:``}
+        <a href="${s}new" @click=${this.#r}>+ New</a>
       </header>
 
       <note-list .notes=${this.notes}></note-list>
-    `}};customElements.define(`index-page`,s);
+    `}};customElements.define(`index-page`,l);

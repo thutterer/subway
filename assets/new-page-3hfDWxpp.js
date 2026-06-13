@@ -1,4 +1,4 @@
-import{a as e,i as t,n,r}from"./index-R2Q_2ygq.js";import"./back-link-CdZJgaVH.js";var i=class extends r{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`change`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=e`
+import{a as e,c as t,l as n,n as r}from"./index-CWqXscgY.js";import"./back-link-BRt7wCC8.js";var i=class extends e{constructor(...e){super(...e),this.options=[],this.value=``}static{this.properties={options:{type:Array},value:{type:String}}}_onSelect(e){this.value=e,this.dispatchEvent(new CustomEvent(`tile-select`,{detail:{value:e},bubbles:!0,composed:!0}))}static{this.styles=n`
     :host {
       display: block;
     }
@@ -68,14 +68,14 @@ import{a as e,i as t,n,r}from"./index-R2Q_2ygq.js";import"./back-link-CdZJgaVH.j
           </button>
         `)}
       </div>
-    `}};customElements.define(`tile-select`,i);var a=t`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M16 4h-2v6h6V8h2v14H2V2h14v2ZM4 20h16v-8h-8V4H4v16Zm8-2H6v-2h6v2Zm-2-4H6v-2h4v2Zm10-6h-2V6h2v2Zm-2-2h-2V4h2v2Z"/></svg>`,o=t`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M10 5h12v2H10zm0 4h8v2h-8zm0 4h12v2H10zm0 4h8v2h-8zM4 7v2h2V7H4Zm4 4H2V5h6v6Zm-6 2h6v2H2zm0 4h6v2H2zm0 0v-2h2v2zm4 0v-2h2v2z"/></svg>`,s=[{value:`Note`,label:`Note`,icon:a},{value:`List`,label:`List`,icon:o}],c=class extends r{static{this.styles=e`
+    `}};customElements.define(`tile-select`,i);var a=t`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M16 4h-2v6h6V8h2v14H2V2h14v2ZM4 20h16v-8h-8V4H4v16Zm8-2H6v-2h6v2Zm-2-4H6v-2h4v2Zm10-6h-2V6h2v2Zm-2-2h-2V4h2v2Z"/></svg>`,o=t`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M10 5h12v2H10zm0 4h8v2h-8zm0 4h12v2H10zm0 4h8v2h-8zM4 7v2h2V7H4Zm4 4H2V5h6v6Zm-6 2h6v2H2zm0 4h6v2H2zm0 0v-2h2v2zm4 0v-2h2v2z"/></svg>`,s=[{value:`Note`,label:`Note`,icon:a},{value:`List`,label:`List`,icon:o}],c=class extends e{static{this.styles=n`
     .header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
     }
-  `}async _onTypeChange(e){let t=e.detail.value,r=await n(``,t);this.dispatchEvent(new CustomEvent(`navigate-to`,{bubbles:!0,composed:!0,detail:{id:r}}))}render(){return t`
+  `}async _onTypeChange(e){let t=e.detail.value,n=await r(``,t);this.dispatchEvent(new CustomEvent(`navigate`,{bubbles:!0,composed:!0,detail:{path:`note/${n}`}}))}render(){return t`
       <div class="header">
         <back-link></back-link>
         <h2>What do you want to create?</h2>
@@ -83,6 +83,6 @@ import{a as e,i as t,n,r}from"./index-R2Q_2ygq.js";import"./back-link-CdZJgaVH.j
 
       <tile-select
         .options=${s}
-        @change=${this._onTypeChange}
+        @tile-select=${this._onTypeChange}
       ></tile-select>
     `}};customElements.define(`new-page`,c);
